@@ -23,6 +23,9 @@ def create_app():
     from controllers import register_controllers
     register_controllers(app)
 
+    from utils.error_handlers import register_error_handlers
+    register_error_handlers(app)
+
     # tiny health route so we can test
     @app.get("/healthz")
     def health():
