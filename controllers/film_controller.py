@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from extensions import db
 from models.film import Film
-from schemas.film import FilmCreateSchema
+from schemas.film_schema import FilmCreateSchema
 
 film_bp = Blueprint("films", __name__)
 create_schema = FilmCreateSchema()
