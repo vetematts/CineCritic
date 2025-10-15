@@ -1,4 +1,3 @@
-# models/film.py
 from extensions import db
 
 class Film(db.Model):
@@ -8,4 +7,7 @@ class Film(db.Model):
     release_year = db.Column(db.Integer)
     director = db.Column(db.String(100))
     description = db.Column(db.Text)
-    __table_args__ = (db.UniqueConstraint("title", "release_year", name="uq_film_title_year"),)
+
+    __table_args__ = (
+        db.UniqueConstraint("title", "release_year", name="uq_film_title_year"),
+    )

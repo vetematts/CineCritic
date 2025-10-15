@@ -1,4 +1,3 @@
-# schemas/film.py
 from marshmallow import Schema, fields, validate
 
 class FilmCreateSchema(Schema):
@@ -7,8 +6,7 @@ class FilmCreateSchema(Schema):
     director = fields.String(load_default=None, validate=validate.Length(max=100))
     description = fields.String(load_default=None)
 
-# Optional read schema (for consistent responses)
-class FilmSchema(Schema):
+class FilmSchema(Schema):  # for consistent responses
     id = fields.Integer()
     title = fields.String()
     release_year = fields.Integer()
