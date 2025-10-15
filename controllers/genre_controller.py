@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from extensions import db
 from models.genre import Genre
 from marshmallow import ValidationError
-from schemas.genre import GenreCreateSchema, GenreSchema
+from schemas.genre_schema import GenreCreateSchema, GenreSchema
 
 genre_bp = Blueprint("genres", __name__)  # url_prefix is set when registering the blueprint
 
