@@ -1,4 +1,3 @@
-# models/film_genre.py
 from extensions import db
 
 class FilmGenre(db.Model):

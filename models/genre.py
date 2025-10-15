@@ -1,4 +1,3 @@
-# models/genre.py
 from extensions import db
 
 class Genre(db.Model):
