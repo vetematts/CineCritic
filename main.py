@@ -4,14 +4,15 @@ from dotenv import load_dotenv
 from extensions import db, migrate, jwt
 
 def create_app():
-    load_dotenv()  # loads .env into process env
+    load_dotenv()
     app = Flask(__name__)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "dev-key")
+    app.json.sort_keys = False  # optional
 
-       # wire extensions
+    # wire extensions
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
@@ -26,7 +27,6 @@ def create_app():
     from utils.error_handlers import register_error_handlers
     register_error_handlers(app)
 
-    # tiny health route so we can test
     @app.get("/healthz")
     def health():
         return {"ok": True}, 200
