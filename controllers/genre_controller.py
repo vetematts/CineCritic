@@ -1,10 +1,13 @@
-# controllers/genre_controller.py
+# Installed imports
 from flask import Blueprint, request
+from marshmallow import ValidationError
+
+# Local imports
 from extensions import db
 from models.genre import Genre
-from marshmallow import ValidationError
 from schemas.genre_schema import GenreCreateSchema, GenreSchema
 
+# Blueprint
 genre_bp = Blueprint("genres", __name__)  # url_prefix is set when registering the blueprint
 
 # Schemas
@@ -12,11 +15,16 @@ create_schema = GenreCreateSchema()
 read_schema = GenreSchema()
 read_many_schema = GenreSchema(many=True)
 
+# -------------------------------
+# Genre CRUD
+# -------------------------------
+
 @genre_bp.get("")
 def list_genres():
     """GET /genres — list all genres."""
     rows = db.session.scalars(db.select(Genre).order_by(Genre.name)).all()
     return {"data": read_many_schema.dump(rows)}, 200
+
 
 @genre_bp.post("")
 def create_genre():
@@ -27,6 +35,7 @@ def create_genre():
     db.session.add(g)
     db.session.commit()
     return read_schema.dump(g), 201
+
 
 @genre_bp.delete("/<int:genre_id>")
 def delete_genre(genre_id: int):
