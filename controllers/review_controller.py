@@ -121,8 +121,8 @@ def update_review(film_id: int, review_id: int):
     next_status = body.get("status")
     if r.status == "published" and next_status == "draft":
         return {"error": "unprocessable_entity", "detail": "Cannot revert published to draft."}, 422
-    if next_status == "published" and not (body.get("comment") or r.comment):
-        return {"error": "bad_request", "detail": "Comment required when publishing."}, 400
+    if next_status == "published" and not (body.get("body") or r.body):
+        return {"error": "bad_request", "detail": "Body required when publishing."}, 400
 
     # use schema for validation in one place
     data = create_schema.load(body, partial=True)
@@ -175,8 +175,8 @@ def publish_review(film_id: int, review_id: int):
     if ident["role"] != "admin" and r.user_id != ident["id"]:
         return {"error": "forbidden", "detail": "Not your review"}, 403
 
-    if not r.comment:
-        return {"error": "bad_request", "detail": "Comment required when publishing."}, 400
+    if not r.body:
+        return {"error": "bad_request", "detail": "Body required when publishing."}, 400
 
     r.status = "published"
     r.published_at = db.func.now()

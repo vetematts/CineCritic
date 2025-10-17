@@ -8,7 +8,7 @@ class Review(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     rating = db.Column(db.Numeric(2, 1), nullable=False)  # 0.5–5.0 step 0.5
-    comment = db.Column(db.Text, nullable=True)
+    body = db.Column(db.Text, nullable=True)
     status = db.Column(review_status_enum, nullable=False, default="draft")
 
     film_id = db.Column(db.Integer, db.ForeignKey("films.id", ondelete="CASCADE"), nullable=False)
