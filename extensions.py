@@ -4,4 +4,4 @@ from flask_jwt_extended import JWTManager
 
 db = SQLAlchemy()     # ORM (models <-> Postgres)
 migrate = Migrate()   # Alembic migrations
-jwt = JWTManager()    # JWT auth (we'll use it soon)
+jwt = JWTManager()    # JWT auth 
