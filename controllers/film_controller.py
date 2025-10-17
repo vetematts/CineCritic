@@ -2,6 +2,7 @@
 from flask import Blueprint, request
 from sqlalchemy.exc import IntegrityError
 from marshmallow import ValidationError
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # Local imports
 from extensions import db
@@ -19,6 +20,13 @@ read_schema = FilmSchema()
 read_many_schema = FilmSchema(many=True)
 genres_read_many = GenreSchema(many=True)
 
+# --- helpers ----------------------------------------------------
+
+def _require_admin():
+    ident = get_jwt_identity()
+    if not ident or ident.get("role") != "admin":
+        return {"error": "forbidden", "detail": "Admin only"}, 403
+    return None
 
 # -------------------------------
 # Film CRUD
@@ -41,8 +49,12 @@ def get_film(film_id: int):
 
 
 @film_bp.post("")
+@jwt_required()
 def create_film():
-    """Create a film (validated by schema)."""
+    """Create a film (validated by schema). Admin only."""
+    err = _require_admin()
+    if err: return err
+
     data = create_schema.load(request.get_json() or {})
     f = Film(**data)
     db.session.add(f)
@@ -51,8 +63,12 @@ def create_film():
 
 
 @film_bp.patch("/<int:film_id>")
+@jwt_required()
 def update_film(film_id: int):
-    """Patch fields on a film."""
+    """Patch fields on a film. Admin only."""
+    err = _require_admin()
+    if err: return err
+
     f = db.session.get(Film, film_id)
     if not f:
         return {"error": "not_found", "detail": f"Film {film_id} not found"}, 404
@@ -66,8 +82,12 @@ def update_film(film_id: int):
 
 
 @film_bp.delete("/<int:film_id>")
+@jwt_required()
 def delete_film(film_id: int):
-    """Delete a film."""
+    """Delete a film. Admin only."""
+    err = _require_admin()
+    if err: return err
+
     f = db.session.get(Film, film_id)
     if not f:
         return {"error": "not_found", "detail": f"Film {film_id} not found"}, 404
@@ -98,8 +118,12 @@ def list_film_genres(film_id: int):
 
 
 @film_bp.post("/<int:film_id>/genres/<int:genre_id>")
+@jwt_required()
 def attach_genre(film_id: int, genre_id: int):
-    """Attach a genre to a film."""
+    """Attach a genre to a film. Admin only."""
+    err = _require_admin()
+    if err: return err
+
     if not db.session.get(Film, film_id):
         return {"error": "not_found", "detail": f"Film {film_id} not found"}, 404
     if not db.session.get(Genre, genre_id):
@@ -113,8 +137,12 @@ def attach_genre(film_id: int, genre_id: int):
 
 
 @film_bp.delete("/<int:film_id>/genres/<int:genre_id>")
+@jwt_required()
 def detach_genre(film_id: int, genre_id: int):
-    """Detach a genre from a film."""
+    """Detach a genre from a film. Admin only."""
+    err = _require_admin()
+    if err: return err
+
     row = db.session.get(FilmGenre, (film_id, genre_id))
     if not row:
         return {"error": "not_found", "detail": "Relation not found"}, 404
