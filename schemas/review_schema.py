@@ -1,4 +1,3 @@
-# schemas/review_schema.py
 from marshmallow import Schema, fields, validate, validates_schema, ValidationError, pre_load
 
 # Allowed ratings: 0.5 .. 5.0 in 0.5 steps
