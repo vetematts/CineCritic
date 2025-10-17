@@ -1,5 +1,6 @@
 # Installed imports
 from flask import Blueprint, request
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import ValidationError
 
 # Local imports
@@ -7,39 +8,50 @@ from extensions import db
 from models.genre import Genre
 from schemas.genre_schema import GenreCreateSchema, GenreSchema
 
-# Blueprint
-genre_bp = Blueprint("genres", __name__)        # url_prefix set in controllers/__init__.py
+genre_bp = Blueprint("genres", __name__)  # url_prefix set in controllers/__init__.py
 
 # Schemas
 create_schema = GenreCreateSchema()
 read_schema = GenreSchema()
-read_many_schema = GenreSchema(many=True)
+read_many = GenreSchema(many=True)
 
+# ---- helpers ---------------------------------------------------
 # -------------------------------
 # Genre CRUD
 # -------------------------------
 
+def _require_admin():
+    ident = get_jwt_identity()
+    if not ident or ident.get("role") != "admin":
+        return {"error": "forbidden", "detail": "Admin only"}, 403
+    return None
+
+# ---- routes ----------------------------------------------------
+
 @genre_bp.get("")
 def list_genres():
-    """GET /genres — list all genres."""
     rows = db.session.scalars(db.select(Genre).order_by(Genre.name)).all()
-    return {"data": read_many_schema.dump(rows)}, 200
-
+    return {"data": read_many.dump(rows)}, 200
 
 @genre_bp.post("")
+@jwt_required()
 def create_genre():
-    """POST /genres — create a genre."""
+    err = _require_admin()
+    if err:
+        return err
     payload = request.get_json() or {}
-    data = create_schema.load(payload)  # validates { "name": "..." }
+    data = create_schema.load(payload)
     g = Genre(**data)
     db.session.add(g)
     db.session.commit()
     return read_schema.dump(g), 201
 
-
 @genre_bp.delete("/<int:genre_id>")
+@jwt_required()
 def delete_genre(genre_id: int):
-    """DELETE /genres/<genre_id> — delete a genre."""
+    err = _require_admin()
+    if err:
+        return err
     g = db.session.get(Genre, genre_id)
     if not g:
         return {"error": "not_found", "detail": f"Genre {genre_id} not found"}, 404
