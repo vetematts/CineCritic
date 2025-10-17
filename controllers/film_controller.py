@@ -34,9 +34,66 @@ def _require_admin():
 
 @film_bp.get("")
 def list_films():
-    """List films ordered by title."""
-    rows = db.session.scalars(db.select(Film).order_by(Film.title)).all()
-    return {"data": read_many_schema.dump(rows)}, 200
+    """
+    List films with pagination and filters.
+    Query params:
+      - page (int, default 1)
+      - per_page (int, default 20, max 100)
+      - title (substring match, case-insensitive)
+      - year (exact int match)
+      - director (substring match, case-insensitive)
+      - genre_id (int; filters films that have this genre)
+    """
+    # parse pagination
+    try:
+        page = int(request.args.get("page", 1))
+        per_page = int(request.args.get("per_page", 20))
+    except ValueError:
+        return {"error": "bad_request", "detail": "page and per_page must be integers"}, 400
+    page = max(1, page)
+    per_page = max(1, min(per_page, 100))
+
+    # base select
+    stmt = db.select(Film)
+
+    # filters
+    title = (request.args.get("title") or "").strip()
+    if title:
+        stmt = stmt.where(Film.title.ilike(f"%{title}%"))
+
+    year = request.args.get("year")
+    if year is not None and year != "":
+        try:
+            year_int = int(year)
+            stmt = stmt.where(Film.release_year == year_int)
+        except ValueError:
+            return {"error": "bad_request", "detail": "year must be an integer"}, 400
+
+    director = (request.args.get("director") or "").strip()
+    if director:
+        stmt = stmt.where(Film.director.ilike(f"%{director}%"))
+
+    # optional genre filter
+    genre_id = request.args.get("genre_id")
+    if genre_id is not None and genre_id != "":
+        try:
+            gid = int(genre_id)
+        except ValueError:
+            return {"error": "bad_request", "detail": "genre_id must be an integer"}, 400
+        # join via junction table
+        stmt = (
+            stmt.join(FilmGenre, FilmGenre.film_id == Film.id)
+                .where(FilmGenre.genre_id == gid)
+        )
+
+    # sort and paginate
+    stmt = stmt.order_by(Film.title.asc())
+    pager = db.paginate(stmt, page=page, per_page=per_page, error_out=False)
+
+    return {
+        "data": read_many_schema.dump(pager.items),
+        "meta": {"page": page, "per_page": per_page, "total": pager.total, "pages": pager.pages}
+    }, 200
 
 
 @film_bp.get("/<int:film_id>")
