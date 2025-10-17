@@ -61,9 +61,9 @@ def seed_tables():
     db.session.commit()
 
     # ========== Seed Reviews ==========
-    r1 = Review(film_id=f1.id, user_id=u1.id, rating=5.0, comment="A mind-bender.", status="published")
-    r2 = Review(film_id=f2.id, user_id=u2.id, rating=4.5, comment="Tense and brilliant.", status="draft")
-    r3 = Review(film_id=f1.id, user_id=u2.id, rating=4.0, comment="Flag me please", status="flagged")
+    r1 = Review(film_id=f1.id, user_id=u1.id, rating=5.0, body="A mind-bender.", status="published", published_at=db.func.now())
+    r2 = Review(film_id=f2.id, user_id=u2.id, rating=4.5, body="Tense and brilliant.", status="draft")
+    r3 = Review(film_id=f1.id, user_id=u2.id, rating=4.0, body="Flag me please", status="flagged", flagged_at=db.func.now())
     db.session.add_all([r1, r2, r3])
     db.session.commit()
 
