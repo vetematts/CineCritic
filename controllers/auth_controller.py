@@ -38,7 +38,7 @@ def login():
     creds = login_schema.load(request.get_json() or {})
     user = db.session.scalar(db.select(User).filter_by(email=creds["email"]))
     if not user or not check_password_hash(user.password_hash, creds["password"]):
-        return {"error":"unauthorized","detail":"Invalid email or password"}, 401
+        return {"error":"unauthorised","detail":"Invalid email or password"}, 401
 
     token = create_access_token(identity={"id": user.id, "role": user.role})
     return {"access_token": token}, 200

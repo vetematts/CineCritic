@@ -24,7 +24,7 @@ class FilmCreateSchema(Schema):
     )
 
     @pre_load
-    def normalize_strings(self, in_data, **kwargs):
+    def normalise_strings(self, in_data, **kwargs):
         # Trim string fields if they exist
         for key in ("title", "director", "description"):
             val = in_data.get(key)
