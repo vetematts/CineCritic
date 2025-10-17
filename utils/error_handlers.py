@@ -51,3 +51,11 @@ def register_error_handlers(app):
             "message": "An unexpected error occurred. Please try again later."
         }
         return jsonify(response), 500
+
+    @app.errorhandler(Exception)
+    def handle_any_error(err):
+        response = {
+            "error": "Server Error",
+            "message": "An unexpected error occurred."
+        }
+        return jsonify(response), 500
