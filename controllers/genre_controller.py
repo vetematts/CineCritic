@@ -8,7 +8,7 @@ from models.genre import Genre
 from schemas.genre_schema import GenreCreateSchema, GenreSchema
 
 # Blueprint
-genre_bp = Blueprint("genres", __name__)  # url_prefix is set when registering the blueprint
+genre_bp = Blueprint("genres", __name__)        # url_prefix set in controllers/__init__.py
 
 # Schemas
 create_schema = GenreCreateSchema()

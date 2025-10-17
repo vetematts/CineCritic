@@ -5,7 +5,7 @@ from extensions import db
 from models.users import User
 from schemas.users_schema import UserRegisterSchema, LoginSchema
 
-auth_bp = Blueprint("auth", __name__)  # url_prefix set in controllers/__init__.py
+auth_bp = Blueprint("auth", __name__)       # url_prefix set in controllers/__init__.py
 
 register_schema = UserRegisterSchema()
 login_schema = LoginSchema()

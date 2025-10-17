@@ -8,7 +8,7 @@ from models.watchlist import Watchlist
 from models.film import Film
 from schemas.watchlist_schema import WatchlistEntrySchema
 
-watchlist_bp = Blueprint("watchlist", __name__, url_prefix="/users/me/watchlist")
+watchlist_bp = Blueprint("watchlist", __name__)     # url_prefix set in controllers/__init__.py
 
 # Schemas
 schema = WatchlistEntrySchema()
@@ -41,7 +41,10 @@ def list_watchlist():
             .limit(per_page)
     ).all()
 
-    return {"data": read_many.dump(rows), "meta": {"page": page, "per_page": per_page, "total": total}}, 200
+    return {
+        "data": read_many.dump(rows),
+        "meta": {"page": page, "per_page": per_page, "total": total}
+    }, 200
 
 
 @watchlist_bp.post("")

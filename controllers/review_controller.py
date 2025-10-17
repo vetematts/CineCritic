@@ -8,7 +8,7 @@ from models.film import Film
 from models.review import Review
 from schemas.review_schema import ReviewCreateSchema, ReviewSchema
 
-review_bp = Blueprint("reviews", __name__)  # mounted at /films/<int:film_id>/reviews
+review_bp = Blueprint("reviews", __name__)      # url_prefix set in controllers/__init__.py
 
 # Schemas
 create_schema = ReviewCreateSchema()

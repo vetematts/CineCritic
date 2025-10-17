@@ -11,7 +11,7 @@ from models.film_genre import FilmGenre
 from schemas.film_schema import FilmCreateSchema, FilmSchema
 from schemas.genre_schema import GenreSchema
 
-film_bp = Blueprint("films", __name__)  # url_prefix is set when registering the blueprint
+film_bp = Blueprint("films", __name__)      # url_prefix set in controllers/__init__.py
 
 # Schemas
 create_schema = FilmCreateSchema()
