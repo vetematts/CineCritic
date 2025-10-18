@@ -34,16 +34,7 @@ def _require_admin():
 
 @film_bp.get("")
 def list_films():
-    """
-    List films with pagination and filters.
-    Query params:
-      - page (int, default 1)
-      - per_page (int, default 20, max 100)
-      - title (substring match, case-insensitive)
-      - year (exact int match)
-      - director (substring match, case-insensitive)
-      - genre_id (int; filters films that have this genre)
-    """
+    """List films with optional filters and pagination."""
     # parse pagination
     try:
         page = int(request.args.get("page", 1))
