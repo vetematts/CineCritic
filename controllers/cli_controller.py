@@ -1,3 +1,15 @@
+"""
+Database CLI commands for CineCritic.
+
+Provides:
+  - flask db drop    → Drop all tables (dev only)
+  - flask db create  → Create all tables (dev only)
+  - flask db seed    → Insert starter data (safe for local dev)
+
+Notes:
+  - Seeds run in dependency order: Users → Films/Genres → FilmGenre → Reviews → Watchlist
+  - Passwords are hashed; never store plain text.
+"""
 # Installed imports
 from flask import Blueprint
 from werkzeug.security import generate_password_hash
@@ -23,6 +35,11 @@ def seed_tables():
     # Reset schema (dev use)
     db.drop_all()
     db.create_all()
+
+    # If data already exists, skip to avoid duplicating in shared envs
+    if db.session.scalar(db.select(User).limit(1)):
+        print("Seed skipped: data already present.")
+        return
 
     # ========== Seed Users ==========
     u1 = User(
