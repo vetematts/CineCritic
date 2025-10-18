@@ -56,6 +56,9 @@ def _ensure_film_or_404(film_id):
         return {"error": "not_found", "detail": f"Film {film_id} not found"}, 404
     return None
 
+def _forbidden(detail: str):
+    return {"error": "forbidden", "detail": detail}, 403
+
 
 # ========= LIST REVIEWS =========
 # GET /films/<film_id>/reviews
@@ -142,7 +145,7 @@ def get_review(film_id: int, review_id: int):
     if r.status != "published":
         # allow if owner or admin
         if not ident or (ident["id"] != r.user_id and not _is_admin(ident)):
-            return {"error": "forbidden", "detail": "Not allowed to view this review"}, 403
+            return _forbidden("Not allowed to view this review")
 
     return read_schema.dump(r), 200
 
@@ -162,7 +165,7 @@ def update_review(film_id: int, review_id: int):
 
     ident = _current_user()
     if ident["id"] != r.user_id and not _is_admin(ident):
-        return {"error": "forbidden", "detail": "Only the author or admin can edit"}, 403
+        return _forbidden("Only the author or admin can edit")
 
     payload = request.get_json() or {}
     data = update_schema.load(payload, partial=True)
@@ -208,7 +211,7 @@ def delete_review(film_id: int, review_id: int):
 
     ident = _current_user()
     if ident["id"] != r.user_id and not _is_admin(ident):
-        return {"error": "forbidden", "detail": "Only the author or admin can delete"}, 403
+        return _forbidden("Only the author or admin can delete")
 
     db.session.delete(r)
     db.session.commit()
@@ -230,7 +233,7 @@ def publish_review(film_id: int, review_id: int):
 
     ident = _current_user()
     if ident["id"] != r.user_id and not _is_admin(ident):
-        return {"error": "forbidden", "detail": "Only the author or admin can publish"}, 403
+        return _forbidden("Only the author or admin can publish")
 
     if not r.body:
         return {"error": "bad_request", "detail": "Body required when publishing."}, 400
