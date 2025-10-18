@@ -30,7 +30,7 @@ read_many = WatchlistEntrySchema(many=True)
 # Watchlist for current user
 # -------------------------------
 
-# LIST
+ # ========= LIST WATCHLIST =========
 @watchlist_bp.get("")
 @jwt_required()
 def list_watchlist():
@@ -60,7 +60,7 @@ def list_watchlist():
     }, 200
 
 
-# ADD
+ # ========= ADD TO WATCHLIST =========
 @watchlist_bp.post("")
 @jwt_required()
 def add_to_watchlist():
@@ -85,7 +85,7 @@ def add_to_watchlist():
     return schema.dump(entry), 201
 
 
-# REMOVE
+ # ========= REMOVE FROM WATCHLIST =========
 @watchlist_bp.delete("/<int:film_id>")
 @jwt_required()
 def remove_from_watchlist(film_id: int):

@@ -1,3 +1,16 @@
+"""
+Controller for Review-related routes and logic.
+Handles all CRUD operations and state changes for reviews:
+    - List reviews for a film
+    - Get one review
+    - Create a new review
+    - Update an existing review
+    - Delete a review
+    - Publish or flag a review
+
+Note:
+    - IntegrityError and ValidationError are handled globally in utils.error_handlers.
+"""
 # Installed imports
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -44,10 +57,8 @@ def _ensure_film_or_404(film_id):
     return None
 
 
-# -------------------------------
-# List published reviews for a film
+# ========= LIST REVIEWS =========
 # GET /films/<film_id>/reviews
-# -------------------------------
 @review_bp.get("")
 def list_reviews(film_id: int):
     # 404 if film missing
@@ -78,10 +89,8 @@ def list_reviews(film_id: int):
     }, 200
 
 
-# -------------------------------
-# Create a review (draft or published)
+# ========= CREATE NEW REVIEW =========
 # POST /films/<film_id>/reviews
-# -------------------------------
 @review_bp.post("")
 @jwt_required()
 def create_review(film_id: int):
@@ -117,10 +126,8 @@ def create_review(film_id: int):
     return read_schema.dump(new_review), 201
 
 
-# -------------------------------
-# Get a single review (published only, unless owner/admin)
+# ========= GET ONE REVIEW =========
 # GET /films/<film_id>/reviews/<review_id>
-# -------------------------------
 @review_bp.get("/<int:review_id>")
 def get_review(film_id: int, review_id: int):
     err = _ensure_film_or_404(film_id)
@@ -140,10 +147,8 @@ def get_review(film_id: int, review_id: int):
     return read_schema.dump(r), 200
 
 
-# -------------------------------
-# Update a review (owner only)
+# ========= UPDATE REVIEW =========
 # PATCH /films/<film_id>/reviews/<review_id>
-# -------------------------------
 @review_bp.patch("/<int:review_id>")
 @jwt_required()
 def update_review(film_id: int, review_id: int):
@@ -188,10 +193,8 @@ def update_review(film_id: int, review_id: int):
     return read_schema.dump(r), 200
 
 
-# -------------------------------
-# Delete a review (owner or admin)
+# ========= DELETE REVIEW =========
 # DELETE /films/<film_id>/reviews/<review_id>
-# -------------------------------
 @review_bp.delete("/<int:review_id>")
 @jwt_required()
 def delete_review(film_id: int, review_id: int):
@@ -212,10 +215,8 @@ def delete_review(film_id: int, review_id: int):
     return "", 204
 
 
-# -------------------------------
-# Publish a review (owner only)
+# ========= PUBLISH REVIEW =========
 # POST /films/<film_id>/reviews/<review_id>/publish
-# -------------------------------
 @review_bp.post("/<int:review_id>/publish")
 @jwt_required()
 def publish_review(film_id: int, review_id: int):
@@ -241,10 +242,8 @@ def publish_review(film_id: int, review_id: int):
     return read_schema.dump(r), 200
 
 
-# -------------------------------
-# Flag a review (any authenticated user)
+# ========= FLAG REVIEW =========
 # POST /films/<film_id>/reviews/<review_id>/flag
-# -------------------------------
 @review_bp.post("/<int:review_id>/flag")
 @jwt_required()
 def flag_review(film_id: int, review_id: int):
