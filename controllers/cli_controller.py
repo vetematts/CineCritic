@@ -1,13 +1,15 @@
 """
 Database CLI commands for CineCritic.
 
-Provides:
-    - `flask ops drop`    : Drop all database tables
-    - `flask ops create`  : Create all database tables
-    - `flask ops seed`    : Populate tables with initial sample data
-    - `flask db init`     : Initialise Alembic migrations
-    - `flask db migrate`  : Generate a migration file
-    - `flask db upgrade`  : Apply migrations to the database
+Custom commands:
+  flask ops drop    – drop all tables
+  flask ops create  – create all tables
+  flask ops seed    – populate tables with sample data
+
+Migrations (via Flask-Migrate):
+  flask db init     – set up migrations folder
+  flask db migrate  – generate migration scripts from model changes
+  flask db upgrade  – apply migrations to the database
 
 Notes:
   - Seeds run in dependency order: Users → Films/Genres → FilmGenre → Reviews → Watchlist
