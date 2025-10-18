@@ -1,3 +1,15 @@
+"""
+Controller for the current user's watchlist.
+
+Handles:
+  - List watchlist entries (with pagination)
+  - Add a film to the watchlist
+  - Remove a film from the watchlist
+
+Note:
+  - ValidationError and IntegrityError are handled globally in utils.error_handlers.
+"""
+
 # Installed imports
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -18,10 +30,11 @@ read_many = WatchlistEntrySchema(many=True)
 # Watchlist for current user
 # -------------------------------
 
+# LIST
 @watchlist_bp.get("")
 @jwt_required()
 def list_watchlist():
-    """GET /users/me/watchlist — list entries; supports ?page & ?per_page (1..100)."""
+    """List the current user's watchlist entries (supports ?page & ?per_page)."""
     ident = get_jwt_identity()
 
     # pagination guards
@@ -47,10 +60,11 @@ def list_watchlist():
     }, 200
 
 
+# ADD
 @watchlist_bp.post("")
 @jwt_required()
 def add_to_watchlist():
-    """POST /users/me/watchlist — add a film by film_id."""
+    """Add a film to the current user's watchlist."""
     ident = get_jwt_identity()
     payload = request.get_json() or {}
 
@@ -71,10 +85,11 @@ def add_to_watchlist():
     return schema.dump(entry), 201
 
 
+# REMOVE
 @watchlist_bp.delete("/<int:film_id>")
 @jwt_required()
 def remove_from_watchlist(film_id: int):
-    """DELETE /users/me/watchlist/<film_id> — remove a film from watchlist."""
+    """Remove a film from the current user's watchlist."""
     ident = get_jwt_identity()
     entry = db.session.get(Watchlist, (ident["id"], film_id))
     if not entry:
