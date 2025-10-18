@@ -14,7 +14,7 @@ Note:
 """
 
 # Installed imports
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # Local imports
@@ -33,17 +33,13 @@ read_schema = FilmSchema()
 read_many_schema = FilmSchema(many=True)
 genres_read_many = GenreSchema(many=True)
 
-# --- helpers ----------------------------------------------------
+# ========= HELPERS =========
 
 def _require_admin():
     ident = get_jwt_identity()
     if not ident or ident.get("role") != "admin":
-        return {"error": "forbidden", "detail": "Admin only"}, 403
+        abort(403)
     return None
-
-# -------------------------------
-# Film CRUD
-# -------------------------------
 
 # ========= LIST FILMS =========
 @film_bp.get("")
