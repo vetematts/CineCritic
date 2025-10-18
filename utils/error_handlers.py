@@ -82,12 +82,8 @@ def register_error_handlers(app):
     def on_405(_):
         return _json("method_not_allowed", "Method not allowed for this endpoint.", 405)
 
-    # ========== SERVER ERRORS ==========
-    @app.errorhandler(500)
-    def on_500(_):
-        return _json("server_error", "Unexpected server error.", 500)
-
     # ========== FALLBACK ==========
     @app.errorhandler(Exception)
-    def on_any_error(_):
+    def on_any_error(err):
+        app.logger.exception(err)
         return _json("server_error", "Unexpected error.", 500)
