@@ -64,6 +64,16 @@ def register_error_handlers(app):
         return _json("bad_request", primary_msg or "Invalid data input.", 400)
 
     # ========== CLIENT ERRORS ==========
+    @app.errorhandler(400)
+    def on_bad_request(err):
+        # e.g. invalid JSON payload or missing Content-Type
+        return _json("bad_request", "Invalid request format. Check your JSON and headers.", 400)
+
+    @app.errorhandler(KeyError)
+    def on_key_error(err):
+        missing = str(err).strip("'\"")
+        return _json("bad_request", f"Missing required field: {missing}", 400)
+
     @app.errorhandler(404)
     def on_404(_):
         return _json("not_found", "Resource not found.", 404)
