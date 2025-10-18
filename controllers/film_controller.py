@@ -1,3 +1,18 @@
+"""
+Controller for Film-related routes.
+
+Handles:
+  - List films (filters + pagination)
+  - Get one film
+  - Create a film (admin only)
+  - Update a film (admin only)
+  - Delete a film (admin only)
+  - Manage film ↔ genre links (admin only)
+
+Note:
+  - ValidationError and IntegrityError are handled globally in utils.error_handlers.
+"""
+
 # Installed imports
 from flask import Blueprint, request
 from sqlalchemy.exc import IntegrityError
@@ -32,6 +47,7 @@ def _require_admin():
 # Film CRUD
 # -------------------------------
 
+# ========= LIST FILMS =========
 @film_bp.get("")
 def list_films():
     """List films with optional filters and pagination."""
@@ -86,7 +102,7 @@ def list_films():
         "meta": {"page": page, "per_page": per_page, "total": pager.total, "pages": pager.pages}
     }, 200
 
-
+# ========= GET ONE FILM =========
 @film_bp.get("/<int:film_id>")
 def get_film(film_id: int):
     """Fetch a single film by id."""
@@ -95,7 +111,7 @@ def get_film(film_id: int):
         return {"error": "not_found", "detail": f"Film {film_id} not found"}, 404
     return read_schema.dump(f), 200
 
-
+# ========= CREATE FILM =========
 @film_bp.post("")
 @jwt_required()
 def create_film():
@@ -109,7 +125,7 @@ def create_film():
     db.session.commit()
     return read_schema.dump(f), 201
 
-
+# ========= UPDATE FILM =========
 @film_bp.patch("/<int:film_id>")
 @jwt_required()
 def update_film(film_id: int):
@@ -128,7 +144,7 @@ def update_film(film_id: int):
     db.session.commit()
     return read_schema.dump(f), 200
 
-
+# ========= DELETE FILM =========
 @film_bp.delete("/<int:film_id>")
 @jwt_required()
 def delete_film(film_id: int):
@@ -149,6 +165,7 @@ def delete_film(film_id: int):
 # (pure M:N via models/film_genre)
 # -------------------------------
 
+# ========= LIST FILM GENRES =========
 @film_bp.get("/<int:film_id>/genres")
 def list_film_genres(film_id: int):
     """List genres attached to a film."""
@@ -164,7 +181,7 @@ def list_film_genres(film_id: int):
     )
     return {"data": genres_read_many.dump(rows)}, 200
 
-
+# ========= ATTACH GENRE =========
 @film_bp.post("/<int:film_id>/genres/<int:genre_id>")
 @jwt_required()
 def attach_genre(film_id: int, genre_id: int):
@@ -183,7 +200,7 @@ def attach_genre(film_id: int, genre_id: int):
     db.session.commit()
     return "", 204
 
-
+# ========= DETACH GENRE =========
 @film_bp.delete("/<int:film_id>/genres/<int:genre_id>")
 @jwt_required()
 def detach_genre(film_id: int, genre_id: int):
