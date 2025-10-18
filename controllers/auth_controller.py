@@ -1,3 +1,16 @@
+"""
+Controller for authentication and user session management.
+
+Handles:
+  - User registration (with hashed passwords)
+  - User login (returns JWT access token)
+  - Fetching the current user's profile
+
+Note:
+  - Passwords are securely hashed with Werkzeug.
+  - JWT identity includes user ID and role for downstream role checks.
+"""
+
 # Installed imports
 from flask import Blueprint, request
 from werkzeug.security import generate_password_hash, check_password_hash
