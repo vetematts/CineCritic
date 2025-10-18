@@ -18,25 +18,26 @@ from werkzeug.security import generate_password_hash
 from extensions import db
 from models import User, Film, Genre, Review, Watchlist, FilmGenre
 
-db_commands = Blueprint("db", __name__)
+ops_commands = Blueprint("ops", __name__)
 
-@db_commands.cli.command("create")
+# ======== CLI COMMANDS ========
+
+@ops_commands.cli.command("create")
 def create_tables():
+    """Create all database tables."""
     db.create_all()
     print("Tables created.")
 
-@db_commands.cli.command("drop")
+@ops_commands.cli.command("drop")
 def drop_tables():
+    """Drop all database tables."""
     db.drop_all()
     print("Tables dropped.")
 
-@db_commands.cli.command("seed")
+@ops_commands.cli.command("seed")
 def seed_tables():
-    # Reset schema (dev use)
-    db.drop_all()
-    db.create_all()
-
-    # If data already exists, skip to avoid duplicating in shared envs
+    """Seed the database with sample CineCritic data."""
+    # Safety check: don’t reseed if a user already exists
     if db.session.scalar(db.select(User).limit(1)):
         print("Seed skipped: data already present.")
         return
@@ -90,4 +91,4 @@ def seed_tables():
     db.session.add_all([w1, w2])
     db.session.commit()
 
-    print("Tables seeded.")
+    print("✅ CineCritic Tables seeded.")
