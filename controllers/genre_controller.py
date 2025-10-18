@@ -1,3 +1,16 @@
+"""
+Controller for Genre-related routes.
+
+Handles:
+  - List all genres
+  - Create a new genre (admin only)
+  - Delete a genre by ID (admin only)
+
+Note:
+  - Read operations are public.
+  - Create/Delete require JWT auth and admin role.
+"""
+
 # Installed imports
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -15,10 +28,7 @@ create_schema = GenreCreateSchema()
 read_schema = GenreSchema()
 read_many = GenreSchema(many=True)
 
-# ---- helpers ---------------------------------------------------
-# -------------------------------
-# Genre CRUD
-# -------------------------------
+# ========= HELPERS =========
 
 def _require_admin():
     ident = get_jwt_identity()
@@ -26,13 +36,13 @@ def _require_admin():
         return {"error": "forbidden", "detail": "Admin only"}, 403
     return None
 
-# ---- routes ----------------------------------------------------
-
+# ========= LIST GENRES =========
 @genre_bp.get("")
 def list_genres():
     rows = db.session.scalars(db.select(Genre).order_by(Genre.name)).all()
     return {"data": read_many.dump(rows)}, 200
 
+# ========= CREATE GENRE =========
 @genre_bp.post("")
 @jwt_required()
 def create_genre():
@@ -46,6 +56,7 @@ def create_genre():
     db.session.commit()
     return read_schema.dump(g), 201
 
+# ========= DELETE GENRE =========
 @genre_bp.delete("/<int:genre_id>")
 @jwt_required()
 def delete_genre(genre_id: int):

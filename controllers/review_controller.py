@@ -1,16 +1,18 @@
 """
-Controller for Review-related routes and logic.
-Handles all CRUD operations and state changes for reviews:
-    - List reviews for a film
-    - Get one review
-    - Create a new review
-    - Update an existing review
-    - Delete a review
-    - Publish or flag a review
+Controller for Review-related routes.
+
+Handles:
+  - List reviews for a film
+  - Get one review
+  - Create a new review
+  - Update an existing review
+  - Delete a review
+  - Publish or flag a review
 
 Note:
-    - IntegrityError and ValidationError are handled globally in utils.error_handlers.
+  - IntegrityError and ValidationError are handled globally in utils.error_handlers.
 """
+
 # Installed imports
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -38,9 +40,7 @@ class ReviewUpdateSchema(Schema):
 update_schema = ReviewUpdateSchema()
 
 
-# -------------------------------
-# Helpers
-# -------------------------------
+# ========= HELPERS =========
 def _current_user():
     """Return {'id': int, 'role': 'user'|'admin'} or None."""
     try:
