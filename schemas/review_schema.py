@@ -4,25 +4,24 @@ from marshmallow import Schema, fields, validate, validates_schema, ValidationEr
 _ALLOWED_RATINGS = [x / 2 for x in range(1, 11)]  # 0.5..5.0
 
 class ReviewCreateSchema(Schema):
+    # Only the fields the client should send; ids come from JWT + URL
     rating = fields.Float(required=True, validate=validate.OneOf(_ALLOWED_RATINGS))
-    body = fields.String(load_default=None, validate=validate.Length(max=5000))
+    body   = fields.String(load_default=None, validate=validate.Length(max=5000))
     status = fields.String(load_default="draft", validate=validate.OneOf(["draft", "published", "flagged"]))
-    # For now these are passed in; later you can infer user_id from JWT and take film_id from the URL
-    user_id = fields.Integer(required=True)
-    film_id = fields.Integer(required=True)
 
     @pre_load
     def _trim_strings(self, in_data, **kwargs):
         # Normalise whitespace so "   " doesn't sneak past validation
+        data = dict(in_data or {})
         for key in ("body", "status"):
-            val = in_data.get(key)
+            val = data.get(key)
             if isinstance(val, str):
-                in_data[key] = val.strip()
-        return in_data
+                data[key] = val.strip()
+        return data
 
     @validates_schema
     def _status_rules(self, data, **kwargs):
-        # Simple rule: if creating as published, body must exist
+        # If creating as published, body must exist
         if data.get("status") == "published" and not data.get("body"):
             raise ValidationError({"body": ["Body is required when publishing."]})
 
