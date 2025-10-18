@@ -9,6 +9,7 @@ Handles:
 Note:
   - Read operations are public.
   - Create/Delete require JWT auth and admin role.
+  - ValidationError and IntegrityError are handled globally in utils.error_handlers.
 """
 
 # Installed imports
