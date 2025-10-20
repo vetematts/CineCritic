@@ -8,7 +8,7 @@ class Film(db.Model):
     director = db.Column(db.String(100))
     description = db.Column(db.Text)
 
-    # --- relationships ---
+    # ========== Relationships ==========
     reviews = db.relationship("Review", back_populates="film", cascade="all, delete-orphan")
     genres = db.relationship("Genre", secondary="film_genres", back_populates="films")
     watchlist_entries = db.relationship("Watchlist", back_populates="film", cascade="all, delete-orphan")
