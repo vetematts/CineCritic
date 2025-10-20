@@ -6,8 +6,4 @@ class Genre(db.Model):
     name = db.Column(db.String(50), unique=True, nullable=False)
 
     # ========== Relationships ==========
-    films = db.relationship(
-        "Film",
-        secondary="film_genres",
-        back_populates="genres"
-    )
+    films = db.relationship("Film", secondary="film_genres", back_populates="genres")

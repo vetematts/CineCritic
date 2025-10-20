@@ -1,6 +1,6 @@
 from extensions import db
-class Review(db.Model):
 
+class Review(db.Model):
     __tablename__ = "reviews"
 
     # define the enum type for status
@@ -34,3 +34,7 @@ class Review(db.Model):
             name="ck_review_published_time"
         ),
     )
+
+    # ========== Relationships ==========
+    film = db.relationship("Film", back_populates="reviews")
+    user = db.relationship("User", back_populates="reviews")
