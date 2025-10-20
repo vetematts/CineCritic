@@ -18,3 +18,7 @@ class Watchlist(db.Model):
     )
 
     added_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    # ========== Relationships ==========
+    user = db.relationship("User", back_populates="watchlist_entries")
+    film = db.relationship("Film", back_populates="watchlist_entries")
