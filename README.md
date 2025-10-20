@@ -35,7 +35,9 @@ pip install -r requirements.txt
 
 Database Setup
 
-1. Initialize Alembic migrations
+For Developers (when making model changes)
+
+1. Initialize Alembic migrations (first time only)
 
 flask db init
 
@@ -47,7 +49,13 @@ flask db migrate -m "initial schema"
 
 flask db upgrade
 
-4. Seed data (optional)
+For Users (setup only)
+
+1. Apply migrations to latest version
+
+flask db upgrade head
+
+2. Seed data (optional)
 
 flask ops seed
 
@@ -61,4 +69,3 @@ Running the API
 Start the development server:
 
 flask run
-
