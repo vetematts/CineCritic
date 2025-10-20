@@ -58,7 +58,13 @@ def seed_tables():
         email="sol@example.com",
         password_hash=generate_password_hash("secret123")
     )
-    db.session.add_all([u1, u2])
+    admin = User(
+        username="admin",
+        email="admin@example.com",
+        password_hash=generate_password_hash("admin123"),
+        role="admin"
+    )
+    db.session.add_all([u1, u2, admin])
     db.session.commit()
 
     # ========== Seed Films ==========
