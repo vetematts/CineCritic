@@ -8,7 +8,7 @@ Handles:
 
 Note:
   - Passwords are securely hashed with Werkzeug.
-  - JWT identity includes user ID and role for downstream role checks.
+  - JWT identity is the user ID (string). The user's role is added via additional JWT claims.
 """
 
 # Installed imports
@@ -60,17 +60,18 @@ def login():
         return {"error": "unauthorised", "detail": "Invalid email or password"}, 401
 
     # JWT identity shaped for admin checks elsewhere
-    token = create_access_token(identity={"id": user.id, "role": user.role})
+    token = create_access_token(
+        identity=str(user.id),                       # subject must be string/int
+        additional_claims={"role": user.role}        # custom claim for role
+    )
     return {"access_token": token}, 200
 
 
 @auth_bp.get("/me")
 @jwt_required()
 def me():
-    ident = get_jwt_identity()  # {"id":..., "role":...}
-    user = db.session.get(User, ident["id"])
+    user_id = int(get_jwt_identity())
+    user = db.session.get(User, user_id)
     if not user:
         return {"error": "not_found", "detail": "User not found"}, 404
-    return {
-        "id": user.id, "username": user.username, "email": user.email, "role": user.role
-    }, 200
+    return {"id": user.id, "username": user.username, "email": user.email, "role": user.role}, 200
