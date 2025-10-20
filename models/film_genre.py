@@ -1,4 +1,4 @@
-"""FilmGenre model definition.
+"""FilmGenre model:
 
 Contains the FilmGenre junction table that represents the many-to-many
 relationship between films and genres.

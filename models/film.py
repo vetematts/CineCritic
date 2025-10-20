@@ -1,4 +1,4 @@
-"""Film model definition.
+"""Film model:
 
 Represents a film in the CineCritic database. Each film can have multiple reviews,
 be linked to multiple genres, and appear in users’ watchlists.
