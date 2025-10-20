@@ -1,3 +1,24 @@
+"""User model:
+
+Represents a registered user in the CineCritic application.
+
+Attributes:
+- id (Integer): Primary key, unique identifier for each user.
+- username (String): Unique username for the user, max length 50 characters.
+- email (String): Unique email address of the user, max length 100 characters.
+- password_hash (String): Hashed password for authentication, max length 255 characters.
+- role (String): Role of the user, either 'user' or 'admin', default is 'user'.
+- created_at (DateTime): Timestamp when the user was created, set automatically.
+
+Constraints:
+- username and email must be unique and not null.
+- role has a default value 'user'.
+
+Relationships:
+- reviews: One-to-many relationship with Review model; a user can write multiple reviews.
+- watchlist_entries: One-to-many relationship with Watchlist model; a user can have multiple watchlist entries.
+"""
+
 from extensions import db
 
 class User(db.Model):
