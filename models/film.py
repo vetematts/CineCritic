@@ -1,3 +1,15 @@
+"""Film model definition.
+
+Represents a film in the CineCritic database. Each film can have multiple reviews,
+be linked to multiple genres, and appear in users’ watchlists.
+
+Constraints:
+    - Unique combination of title and release year.
+Relationships:
+    - One-to-many with Review (deletes cascade).
+    - Many-to-many with Genre via film_genres.
+    - One-to-many with Watchlist entries (deletes cascade).
+"""
 from extensions import db
 
 class Film(db.Model):
