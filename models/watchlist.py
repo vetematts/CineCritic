@@ -1,3 +1,23 @@
+"""
+Watchlist model:
+
+Represents the association table that links users and films
+for a personal watchlist.
+
+Attributes:
+    user_id (int): Foreign key to User, part of composite primary key.
+    film_id (int): Foreign key to Film, part of composite primary key.
+    added_at (datetime): Timestamp when the film was added to the watchlist.
+
+Constraints:
+    - Composite primary key of (user_id, film_id) ensures uniqueness.
+    - CASCADE delete: removing a user or film automatically removes associated watchlist entries.
+
+Relationships:
+    - Each watchlist entry belongs to one user and one film.
+    - Relationships are defined in User and Film models via back_populates.
+"""
+
 from extensions import db
 
 class Watchlist(db.Model):
