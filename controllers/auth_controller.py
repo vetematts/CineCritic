@@ -14,7 +14,7 @@ Note:
 # Installed imports
 from flask import Blueprint, request
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 
 # Local imports
 from extensions import db
@@ -27,7 +27,40 @@ auth_bp = Blueprint("auth", __name__)  # url_prefix set in controllers/__init__.
 register_schema = UserRegisterSchema()
 login_schema = LoginSchema()
 
-# --- routes ----------------------------------------------------
+# ========== Admin only Routes ==========
+
+@auth_bp.get("/users")
+@jwt_required()
+def list_users():
+    claims = get_jwt()
+    if claims.get("role") != "admin":
+        return {"error": "forbidden", "detail": "Admins only"}, 403
+    users = db.session.scalars(db.select(User)).all()
+    return [
+        {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role
+        }
+        for user in users
+    ], 200
+
+
+@auth_bp.delete("/users/<int:user_id>")
+@jwt_required()
+def delete_user(user_id):
+    claims = get_jwt()
+    if claims.get("role") != "admin":
+        return {"error": "forbidden", "detail": "Admins only"}, 403
+    user = db.session.get(User, user_id)
+    if not user:
+        return {"error": "not_found", "detail": "User not found"}, 404
+    db.session.delete(user)
+    db.session.commit()
+    return {"message": f"User {user.username} deleted"}, 200
+
+# ========== User Routes ==========
 
 @auth_bp.post("/register")
 def register():
