@@ -1,7 +1,14 @@
+# Built-in imports
 import os
+
+# Installed imports
 from flask import Flask
 from dotenv import load_dotenv
+
+# Local imports
 from extensions import db, migrate, jwt
+from controllers import register_controllers
+from utils.error_handlers import register_error_handlers
 
 load_dotenv()
 
@@ -9,9 +16,11 @@ def create_app():
     app = Flask(__name__)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+    # disable object change tracking to save memory
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "dev-key")
-    app.json.sort_keys = False  # optional
+    # To keep the order of keys in JSON response
+    app.json.sort_keys = False
 
     # wire extensions
     db.init_app(app)
@@ -22,10 +31,8 @@ def create_app():
     import models  # noqa: F401
 
     # register all blueprints
-    from controllers import register_controllers
     register_controllers(app)
 
-    from utils.error_handlers import register_error_handlers
     register_error_handlers(app)
 
     @app.get("/healthz")
