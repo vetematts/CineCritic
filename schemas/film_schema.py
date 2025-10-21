@@ -1,3 +1,13 @@
+"""
+Film schemas.
+
+Defines schemas for creating and serialising Film objects.
+
+- FilmCreateSchema: Validates input when creating a film, ensuring title, release year,
+  director, and description follow length/range rules. Trims whitespace before validation.
+- FilmSchema: Serialises Film objects for output, including id and descriptive fields.
+"""
+
 from datetime import date
 from marshmallow import Schema, fields, validate, pre_load, ValidationError
 
