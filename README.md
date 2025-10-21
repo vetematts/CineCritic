@@ -1,11 +1,8 @@
 # CineCritic 🎞️
 
-<details>
-<summary>📖 Overview</summary>
+## 📖 Overview
 
 CineCritic is a RESTful backend built with Flask that helps you manage films, genres, user reviews, and personal watchlists. It features JWT authentication, role-based access control, data validation, and database migrations to keep your app secure and scalable. Whether you're building a movie discovery app or a review community, CineCritic provides a solid foundation to get started quickly.
-
-</details>
 
 ---
 
@@ -227,6 +224,9 @@ Starts the Flask development server. The API will be available at `http://127.0.
 Base URL: `http://127.0.0.1:5000/`
 All responses are JSON. Pagination parameters: `?page=` and `?per_page=` where applicable.
 
+<details>
+<summary>Auth (`/auth`)</summary>
+
 ### Auth (`/auth`)
 
 | Method | Endpoint | Description |
@@ -236,6 +236,11 @@ All responses are JSON. Pagination parameters: `?page=` and `?per_page=` where a
 | GET | `/auth/me` | Current user profile (requires auth) |
 | GET | `/auth/users` | List all users (admin only) |
 | DELETE | `/auth/users/<id>` | Remove a user (admin only) |
+
+</details>
+
+<details>
+<summary>Films (`/films`)</summary>
 
 ### Films (`/films`)
 
@@ -250,6 +255,11 @@ All responses are JSON. Pagination parameters: `?page=` and `?per_page=` where a
 | POST | `/films/<id>/genres/<genre_id>` | Attach genre (admin only) |
 | DELETE | `/films/<id>/genres/<genre_id>` | Detach genre (admin only) |
 
+</details>
+
+<details>
+<summary>Genres (`/genres`)</summary>
+
 ### Genres (`/genres`)
 
 | Method | Endpoint | Description |
@@ -257,6 +267,11 @@ All responses are JSON. Pagination parameters: `?page=` and `?per_page=` where a
 | GET | `/genres` | List genres |
 | POST | `/genres` | Create genre (admin only) |
 | DELETE | `/genres/<id>` | Delete genre (admin only) |
+
+</details>
+
+<details>
+<summary>Reviews (`/films/&lt;int:film_id&gt;/reviews`)</summary>
 
 ### Reviews (`/films/<int:film_id>/reviews`)
 
@@ -270,6 +285,11 @@ All responses are JSON. Pagination parameters: `?page=` and `?per_page=` where a
 | POST | `/films/<film_id>/reviews/<id>/publish` | Publish review (owner/admin) |
 | POST | `/films/<film_id>/reviews/<id>/flag` | Flag review (any authenticated user) |
 
+</details>
+
+<details>
+<summary>Watchlist (`/users/me/watchlist`)</summary>
+
 ### Watchlist (`/users/me/watchlist`)
 
 | Method | Endpoint | Description |
@@ -277,6 +297,8 @@ All responses are JSON. Pagination parameters: `?page=` and `?per_page=` where a
 | GET | `/users/me/watchlist` | List current user's watchlist entries |
 | POST | `/users/me/watchlist` | Add film to watchlist |
 | DELETE | `/users/me/watchlist/<film_id>` | Remove film from watchlist |
+
+</details>
 
 ### Common Response Codes
 
