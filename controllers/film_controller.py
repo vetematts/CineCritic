@@ -14,7 +14,7 @@ Note:
 """
 
 # Installed imports
-from flask import Blueprint, request, abort
+from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt
 
 # Local imports
@@ -39,7 +39,7 @@ def _require_admin():
     claims = get_jwt()
     role = claims.get("role")
     if role != "admin":
-        abort(403)
+        return {"error": "forbidden", "detail": "Admin only"}, 403
     return None
 
 # ========= LIST FILMS =========

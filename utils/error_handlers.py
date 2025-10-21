@@ -69,6 +69,10 @@ def register_error_handlers(app):
         # e.g. invalid JSON payload or missing Content-Type
         return _json("bad_request", "Invalid request format. Check your JSON and headers.", 400)
 
+    @app.errorhandler(403)
+    def on_forbidden(_):
+        return _json("forbidden", "Forbidden.", 403)
+
     @app.errorhandler(KeyError)
     def on_key_error(err):
         missing = str(err).strip("'\"")
