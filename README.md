@@ -69,80 +69,150 @@ pip3 --version
 
 ## 🚀 Quick Setup
 
-1. **Clone the repository**
+### 1. Clone the repository
 
-   ```bash
-   git clone https://github.com/your-org/CineCritic.git
-   cd CineCritic
-   ```
+```bash
+git clone https://github.com/your-org/CineCritic.git
+```
+This command downloads the project files to your local machine.
 
-2. **Create and activate a virtual environment**
+```bash
+cd CineCritic
+```
+Change into the project directory to start working.
 
-   ```bash
-   python3 -m venv .venv
-   # macOS/Linux
-   source .venv/bin/activate
-   # Windows CMD
-   .venv\Scripts\activate
-   # Windows PowerShell
-   .venv\Scripts\Activate.ps1
-   ```
+### 2. Create and activate a virtual environment
 
-3. **Install dependencies**
+```bash
+python3 -m venv .venv
+```
+Creates a new virtual environment named `.venv` to isolate dependencies.
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+**Activate the virtual environment:**
 
-4. **Configure environment variables**
+<details>
+<summary>macOS/Linux</summary>
 
-   Copy `.env.default` to `.env` and update the values:
+```bash
+source .venv/bin/activate
+```
+Activates the virtual environment on macOS or Linux.
 
-   ```bash
-   cp .env.default .env
-   ```
+</details>
 
-   Required keys:
+<details>
+<summary>Windows CMD</summary>
 
-   ```
-   DATABASE_URL=postgresql://<user>:<password>@localhost:5432/<database_name>
-   JWT_SECRET_KEY=<your_secret_key>
-   ```
+```cmd
+.venv\Scripts\activate
+```
+Activates the virtual environment in Windows Command Prompt.
 
-5. **Set up the database**
+</details>
 
-   Create your PostgreSQL database and user (example):
+<details>
+<summary>Windows PowerShell</summary>
 
-   ```sql
-   CREATE DATABASE cinecritic_dev;
-   CREATE USER cinecritic WITH PASSWORD 'password';
-   GRANT ALL PRIVILEGES ON DATABASE cinecritic_dev TO cinecritic;
-   ```
+```powershell
+.venv\Scripts\Activate.ps1
+```
+Activates the virtual environment in Windows PowerShell.
 
-   Then apply migrations:
+</details>
 
-   ```bash
-   flask db upgrade
-   ```
+### 3. Install dependencies
 
-    If you need to reset migrations:
-    ```bash
-    flask db downgrade && flask db upgrade
-    ```
+```bash
+pip install -r requirements.txt
+```
+Installs all required Python packages specified in `requirements.txt`.
 
-   Optionally seed demo data:
+### 4. Configure environment variables
 
-   ```bash
-   flask ops seed
-   ```
+```bash
+cp .env.default .env
+```
+Copies the example environment file to `.env` where you will set your configuration.
 
-6. **Run the API**
+Edit `.env` with your preferred text editor and update the following keys:
 
-   ```bash
-   flask run
-   ```
+```
+DATABASE_URL=postgresql://<user>:<password>@localhost:5432/<database_name>
+JWT_SECRET_KEY=<your_secret_key>
+```
+Replace `<user>`, `<password>`, `<database_name>`, and `<your_secret_key>` with your actual database credentials and a secret key for JWT.
 
-   The server will be available at `http://127.0.0.1:5000/`.
+### 5. Install and set up PostgreSQL
+
+If you don't have PostgreSQL installed, follow the instructions below.
+
+<details>
+<summary>macOS Installation</summary>
+
+You can install PostgreSQL using Homebrew:
+
+```bash
+brew install postgresql
+```
+Start the PostgreSQL service:
+
+```bash
+brew services start postgresql
+```
+
+</details>
+
+<details>
+<summary>Windows Installation</summary>
+
+Download the installer from the official PostgreSQL website:
+
+https://www.postgresql.org/download/windows/
+
+Run the installer and follow the setup wizard.
+
+After installation, you can start PostgreSQL from the Services app or using pgAdmin.
+
+</details>
+
+### 6. Create the database and user
+
+Connect to PostgreSQL and run the following commands to create your database and user:
+
+```sql
+CREATE DATABASE cinecritic_dev;
+CREATE USER cinecritic WITH PASSWORD 'password';
+GRANT ALL PRIVILEGES ON DATABASE cinecritic_dev TO cinecritic;
+```
+This sets up a database named `cinecritic_dev` and a user `cinecritic` with password `password`. Adjust these as needed.
+
+### 7. Apply database migrations
+
+```bash
+flask db upgrade
+```
+This command applies all Alembic migrations to set up your database schema.
+
+If you need to reset migrations:
+
+```bash
+flask db downgrade && flask db upgrade
+```
+This will revert and re-apply migrations.
+
+### 8. Seed demo data (optional)
+
+```bash
+flask ops seed
+```
+Populates the database with sample data for testing and development.
+
+### 9. Run the API server
+
+```bash
+flask run
+```
+Starts the Flask development server. The API will be available at `http://127.0.0.1:5000/`.
 
 ---
 
