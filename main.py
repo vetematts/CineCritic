@@ -27,7 +27,7 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    # ensure models are registered for migrations
+    # Ensure models are registered for Alembic migrations
     import models  # noqa: F401
 
     # register all blueprints
