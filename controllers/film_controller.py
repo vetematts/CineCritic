@@ -22,8 +22,8 @@ from extensions import db
 from models.film import Film
 from models.genre import Genre
 from models.film_genre import FilmGenre
-from schemas.film_schema import FilmCreateSchema, FilmSchema
-from schemas.genre_schema import GenreSchema
+from schemas.films_schema import FilmCreateSchema, FilmSchema
+from schemas.genres_schema import GenreSchema
 
 film_bp = Blueprint("films", __name__)      # url_prefix set in controllers/__init__.py
 

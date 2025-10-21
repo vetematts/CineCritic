@@ -21,7 +21,7 @@ Relationships:
 from extensions import db
 
 class Watchlist(db.Model):
-    __tablename__ = "watchlist_entries"
+    __tablename__ = "watchlist"
 
     # composite primary key (both must be primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), primary_key=True, nullable=False)

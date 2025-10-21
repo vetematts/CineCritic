@@ -22,7 +22,7 @@ from marshmallow import Schema, fields, validate
 from extensions import db
 from models.review import Review
 from models.film import Film
-from schemas.review_schema import ReviewCreateSchema, ReviewSchema
+from schemas.reviews_schema import ReviewCreateSchema, ReviewSchema
 
 review_bp = Blueprint("reviews", __name__)    # url_prefix set in controllers/__init__.py
 

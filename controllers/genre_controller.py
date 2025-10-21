@@ -20,7 +20,7 @@ from marshmallow import ValidationError
 # Local imports
 from extensions import db
 from models.genre import Genre
-from schemas.genre_schema import GenreCreateSchema, GenreSchema
+from schemas.genres_schema import GenreCreateSchema, GenreSchema
 
 genre_bp = Blueprint("genres", __name__)  # url_prefix set in controllers/__init__.py
 
