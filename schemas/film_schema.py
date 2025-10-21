@@ -4,6 +4,15 @@ from marshmallow import Schema, fields, validate, pre_load, ValidationError
 CURRENT_YEAR = date.today().year
 
 class FilmCreateSchema(Schema):
+    """
+    Schema for validating input when creating a new Film.
+
+    Fields:
+      - title: required, 1–150 characters
+      - release_year: optional, >= 1888 and <= next year
+      - director: optional, max 100 characters
+      - description: optional text
+    """
     title = fields.String(
         required=True,
         validate=validate.Length(min=1, max=150)
@@ -34,6 +43,16 @@ class FilmCreateSchema(Schema):
 
 
 class FilmSchema(Schema):
+    """
+    Schema for serializing Film objects in API responses.
+
+    Fields:
+      - id (read-only)
+      - title
+      - release_year
+      - director
+      - description
+    """
     # Explicit dump_only so clients can’t set id
     id = fields.Integer(dump_only=True)
     title = fields.String()
