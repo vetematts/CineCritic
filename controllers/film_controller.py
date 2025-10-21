@@ -15,7 +15,7 @@ Note:
 
 # Installed imports
 from flask import Blueprint, request, abort
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt
 
 # Local imports
 from extensions import db
@@ -36,8 +36,9 @@ genres_read_many = GenreSchema(many=True)
 # ========= HELPERS =========
 
 def _require_admin():
-    ident = get_jwt_identity()
-    if not ident or ident.get("role") != "admin":
+    claims = get_jwt()
+    role = claims.get("role")
+    if role != "admin":
         abort(403)
     return None
 

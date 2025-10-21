@@ -94,8 +94,8 @@ def login():
 
     # JWT identity shaped for admin checks elsewhere
     token = create_access_token(
-        identity=str(user.id),                       # subject must be string/int
-        additional_claims={"role": user.role}        # custom claim for role
+        identity=str(user.id),                        # subject must be a string/int
+        additional_claims={"role": user.role}         # custom claim for role-based auth
     )
     return {"access_token": token}, 200
 
@@ -103,7 +103,12 @@ def login():
 @auth_bp.get("/me")
 @jwt_required()
 def me():
-    user_id = int(get_jwt_identity())
+    ident = get_jwt_identity()
+    # Accept both legacy dict identities and string/int identities
+    if isinstance(ident, dict):
+        user_id = ident["id"]
+    else:
+        user_id = int(ident)
     user = db.session.get(User, user_id)
     if not user:
         return {"error": "not_found", "detail": "User not found"}, 404

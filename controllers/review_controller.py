@@ -15,7 +15,7 @@ Note:
 
 # Installed imports
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from marshmallow import Schema, fields, validate
 
 # Local imports
@@ -44,9 +44,12 @@ update_schema = ReviewUpdateSchema()
 def _current_user():
     """Return {'id': int, 'role': 'user'|'admin'} or None."""
     try:
-        return get_jwt_identity()
+        identity = get_jwt_identity()
+        claims = get_jwt()
     except Exception:
         return None
+    user_id = identity["id"] if isinstance(identity, dict) else int(identity)
+    return {"id": user_id, "role": claims.get("role")}
 
 def _is_admin(identity):
     return bool(identity and identity.get("role") == "admin")

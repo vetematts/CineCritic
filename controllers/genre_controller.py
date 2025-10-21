@@ -14,7 +14,7 @@ Note:
 
 # Installed imports
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt
 from marshmallow import ValidationError
 
 # Local imports
@@ -32,8 +32,8 @@ read_many = GenreSchema(many=True)
 # ========= HELPERS =========
 
 def _require_admin():
-    ident = get_jwt_identity()
-    if not ident or ident.get("role") != "admin":
+    claims = get_jwt()
+    if claims.get("role") != "admin":
         return {"error": "forbidden", "detail": "Admin only"}, 403
     return None
 

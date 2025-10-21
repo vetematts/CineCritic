@@ -30,12 +30,18 @@ read_many = WatchlistEntrySchema(many=True)
 # Watchlist for current user
 # -------------------------------
 
+def _current_user_id():
+    ident = get_jwt_identity()
+    if isinstance(ident, dict):
+        return ident["id"]
+    return int(ident)
+
  # ========= LIST WATCHLIST =========
 @watchlist_bp.get("")
 @jwt_required()
 def list_watchlist():
     """List the current user's watchlist entries (supports ?page & ?per_page)."""
-    ident = get_jwt_identity()
+    user_id = _current_user_id()
 
     # pagination guards
     try:
@@ -46,7 +52,7 @@ def list_watchlist():
     page = max(1, page)
     per_page = max(1, min(100, per_page))
 
-    base = db.select(Watchlist).where(Watchlist.user_id == ident["id"])
+    base = db.select(Watchlist).where(Watchlist.user_id == user_id)
     total = db.session.scalar(db.select(db.func.count()).select_from(base.subquery()))
     rows = db.session.scalars(
         base.order_by(Watchlist.added_at.desc())
@@ -65,7 +71,7 @@ def list_watchlist():
 @jwt_required()
 def add_to_watchlist():
     """Add a film to the current user's watchlist."""
-    ident = get_jwt_identity()
+    user_id = _current_user_id()
     payload = request.get_json() or {}
 
     # basic input check
@@ -76,10 +82,10 @@ def add_to_watchlist():
     # existence + uniqueness
     if not db.session.get(Film, film_id):
         return {"error": "not_found", "detail": f"Film {film_id} not found"}, 404
-    if db.session.get(Watchlist, (ident["id"], film_id)):
+    if db.session.get(Watchlist, (user_id, film_id)):
         return {"error": "conflict", "detail": "Already in watchlist"}, 409
 
-    entry = Watchlist(user_id=ident["id"], film_id=film_id)
+    entry = Watchlist(user_id=user_id, film_id=film_id)
     db.session.add(entry)
     db.session.commit()
     return schema.dump(entry), 201
@@ -90,8 +96,8 @@ def add_to_watchlist():
 @jwt_required()
 def remove_from_watchlist(film_id: int):
     """Remove a film from the current user's watchlist."""
-    ident = get_jwt_identity()
-    entry = db.session.get(Watchlist, (ident["id"], film_id))
+    user_id = _current_user_id()
+    entry = db.session.get(Watchlist, (user_id, film_id))
     if not entry:
         return {"error": "not_found", "detail": "Not in watchlist"}, 404
     db.session.delete(entry)
