@@ -1,3 +1,10 @@
+"""
+Controller blueprints for CineCritic.
+
+Defines the registration order of controllers.
+Review routes depend on films and users, so they are registered afterwards.
+"""
+
 from .auth_controller import auth_bp
 from .film_controller import film_bp
 from .genre_controller import genre_bp
