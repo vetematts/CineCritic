@@ -20,8 +20,8 @@ from marshmallow import Schema, fields, validate
 
 # Local imports
 from extensions import db
-from models.review import Review
-from models.film import Film
+from models.reviews import Review
+from models.films import Film
 from schemas.reviews_schema import ReviewCreateSchema, ReviewSchema
 
 review_bp = Blueprint("reviews", __name__)    # url_prefix set in controllers/__init__.py

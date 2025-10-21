@@ -6,9 +6,9 @@ Ordering note:
 - For example, Review requires User and Film to exist before it can be imported.
 """
 from .users import User
-from .film import Film
-from .genre import Genre
-from .review import Review
+from .films import Film
+from .genres import Genre
+from .reviews import Review
 from .watchlist import Watchlist
 from .film_genre import FilmGenre
 

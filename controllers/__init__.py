@@ -6,9 +6,9 @@ Review routes depend on films and users, so they are registered afterwards.
 """
 
 from .auth_controller import auth_bp
-from .film_controller import film_bp
-from .genre_controller import genre_bp
-from .review_controller import review_bp
+from .films_controller import film_bp
+from .genres_controller import genre_bp
+from .reviews_controller import review_bp
 from .watchlist_controller import watchlist_bp
 from .cli_controller import ops_commands
 

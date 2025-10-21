@@ -19,8 +19,8 @@ from flask_jwt_extended import jwt_required, get_jwt
 
 # Local imports
 from extensions import db
-from models.film import Film
-from models.genre import Genre
+from models.films import Film
+from models.genres import Genre
 from models.film_genre import FilmGenre
 from schemas.films_schema import FilmCreateSchema, FilmSchema
 from schemas.genres_schema import GenreSchema

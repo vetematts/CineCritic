@@ -17,8 +17,8 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 # Local imports
 from extensions import db
 from models.watchlist import Watchlist
-from models.film import Film
-from schemas.watchlists_schema import WatchlistEntrySchema
+from models.films import Film
+from schemas.watchlist_schema import WatchlistEntrySchema
 
 watchlist_bp = Blueprint("watchlist", __name__)     # url_prefix set in controllers/__init__.py
 
