@@ -33,7 +33,7 @@ CineCritic is a RESTful backend built with Flask that helps you manage films, ge
 - 🍿 RESTful resources for films, genres, reviews, and watchlists with robust validation.
 - 🧭 Clear separation of concerns: controllers, models, schemas, and utilities.
 - 🛡️ Role-aware JWT authentication supporting admin and standard users.
-- 🗄️ Production-ready Alembic migrations and seed commands for demo data.
+- 🗄️ Alembic migrations with seed commands to demonstrate database versioning and sample data.
 
 ---
 
@@ -91,32 +91,22 @@ Creates a new virtual environment named `.venv` to isolate dependencies.
 **Activate the virtual environment:**
 
 <details>
-<summary>macOS/Linux</summary>
+<summary>🍏 macOS</summary>
 
 ```bash
 source .venv/bin/activate
 ```
-Activates the virtual environment on macOS or Linux.
+Activates the virtual environment on macOS.
 
 </details>
 
 <details>
-<summary>Windows CMD</summary>
+<summary>🐧 Linux / Windows WSL</summary>
 
-```cmd
-.venv\Scripts\activate
+```bash
+source .venv/bin/activate
 ```
-Activates the virtual environment in Windows Command Prompt.
-
-</details>
-
-<details>
-<summary>Windows PowerShell</summary>
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-Activates the virtual environment in Windows PowerShell.
+Runs the same activation script under Linux distributions and Windows Subsystem for Linux.
 
 </details>
 
@@ -147,7 +137,7 @@ Replace `<user>`, `<password>`, `<database_name>`, and `<your_secret_key>` with 
 If you don't have PostgreSQL installed, follow the instructions below.
 
 <details>
-<summary>macOS Installation</summary>
+<summary>🍏 macOS Installation</summary>
 
 You can install PostgreSQL using Homebrew:
 
@@ -163,15 +153,22 @@ brew services start postgresql
 </details>
 
 <details>
-<summary>Windows Installation</summary>
+<summary>🐧 Linux / Windows WSL Installation</summary>
 
-Download the installer from the official PostgreSQL website:
+Install PostgreSQL using your package manager (example shown for Debian/Ubuntu):
 
-https://www.postgresql.org/download/windows/
+```bash
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+```
 
-Run the installer and follow the setup wizard.
+Start the PostgreSQL service:
 
-After installation, you can start PostgreSQL from the Services app or using pgAdmin.
+```bash
+sudo service postgresql start
+```
+
+For other distributions, use the equivalent package commands (e.g., `dnf`, `pacman`).
 
 </details>
 
