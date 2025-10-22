@@ -196,6 +196,35 @@ Starts the Flask development server. The API will be available at `http://127.0.
 
 ---
 
+## 🌐 Deployment (Render)
+
+1. **Provision services**
+   - Create a Render PostgreSQL instance (copy the `DATABASE_URL` it generates).
+   - Create a Render Web Service pointing at this repository.
+2. **Configure environment variables**  
+   In the Render Web Service dashboard, add:
+   - `DATABASE_URL` – the managed Postgres connection string.
+   - `JWT_SECRET_KEY` – production secret.
+   - `FLASK_APP=main`
+3. **Build & start commands**
+   - Build: `pip install -r requirements.txt`
+   - Start: `./bin/start.sh`
+4. **What `bin/start.sh` does**  
+   The script (checked into this repo) applies migrations, seeds demo data the first time, then launches gunicorn:
+   ```bash
+   #!/usr/bin/env bash
+   flask db upgrade      # keeps the hosted schema in sync
+   flask ops seed || true
+   exec gunicorn "main:app"
+   ```
+   Because migrations run on every deploy, the hosted database stays aligned with the code.
+5. **Add a custom domain (optional)**  
+   Attach your domain via Render → Web Service → Settings → Custom Domains. Point a CNAME to the Render URL and HTTPS will auto-provision.
+
+Once Render shows the service as live, hit `/healthz` to confirm it returns `{"ok": true}`.
+
+---
+
 ## 🔒 Security & Data Considerations
 
 - Role-based JWT authentication protects admin and user endpoints.
