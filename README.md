@@ -69,7 +69,7 @@ pip3 --version
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-org/CineCritic.git
+git clone https://github.com/vetematts/CineCritic.git
 ```
 This command downloads the project files to your local machine.
 
@@ -87,25 +87,9 @@ Creates a new virtual environment named `.venv` to isolate dependencies.
 
 **Activate the virtual environment:**
 
-<details>
-<summary>🍏 macOS</summary>
-
 ```bash
 source .venv/bin/activate
 ```
-Activates the virtual environment on macOS.
-
-</details>
-
-<details>
-<summary>🐧 Linux / Windows WSL</summary>
-
-```bash
-source .venv/bin/activate
-```
-Runs the same activation script under Linux distributions and Windows Subsystem for Linux.
-
-</details>
 
 ### 3. Install dependencies
 
@@ -178,7 +162,8 @@ CREATE DATABASE cinecritic_dev;
 CREATE USER cinecritic WITH PASSWORD 'password';
 GRANT ALL PRIVILEGES ON DATABASE cinecritic_dev TO cinecritic;
 ```
-This sets up a database named `cinecritic_dev` and a user `cinecritic` with password `password`. Adjust these as needed.
+This sets up a database named `cinecritic_dev` and a user `cinecritic` with password `password`.
+⚠️ Adjust these as needed.
 
 ### 7. Apply database migrations
 
@@ -197,9 +182,10 @@ This will revert and re-apply migrations.
 ### 8. Seed demo data (optional)
 
 ```bash
+flask ops create
 flask ops seed
 ```
-Populates the database with sample data for testing and development.
+Creates tables and seeds the database with sample data for testing and development.
 
 ### 9. Run the API server
 
