@@ -73,11 +73,8 @@ def add_to_watchlist():
     """Add a film to the current user's watchlist."""
     user_id = _current_user_id()
     payload = request.get_json() or {}
-
-    # basic input check
-    film_id = payload.get("film_id")
-    if not isinstance(film_id, int):
-        return {"error": "bad_request", "detail": "film_id must be an integer"}, 400
+    data = schema.load(payload)
+    film_id = data["film_id"]
 
     # existence + uniqueness
     if not db.session.get(Film, film_id):
