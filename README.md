@@ -1,5 +1,9 @@
 # CineCritic 🎞️
 
+> **Live API:** https://cinecritic.me  
+> Fallback: https://cinecritic.onrender.com  
+> Health check: `GET /healthz` → `{"ok": true}`
+
 ## 📖 Overview
 
 CineCritic is a RESTful backend built with Flask that helps you manage films, genres, user reviews, and personal watchlists. It features JWT authentication, role-based access control, data validation, and database migrations to keep your app secure and scalable. Whether you're building a movie discovery app or a review community, CineCritic provides a solid foundation to get started quickly.
