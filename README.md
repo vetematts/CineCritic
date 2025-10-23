@@ -1,8 +1,9 @@
 # CineCritic 🎞️
 
-> **Live API:** https://cinecritic.me
-> Fallback: https://cinecritic.onrender.com
-> Health check: `GET /healthz` → `{"ok": true}`
+> - **Live API:** https://cinecritic.me
+> - Fallback: https://cinecritic.onrender.com
+> - Health check: `GET /healthz` → `{"ok": true}`
+
 
 ## 📖 Overview
 
