@@ -1,7 +1,7 @@
 # CineCritic 🎞️
 
-> **Live API:** https://cinecritic.me  
-> Fallback: https://cinecritic.onrender.com  
+> **Live API:** https://cinecritic.me
+> Fallback: https://cinecritic.onrender.com
 > Health check: `GET /healthz` → `{"ok": true}`
 
 ## 📖 Overview
@@ -43,7 +43,7 @@ CineCritic is a RESTful backend built with Flask that helps you manage films, ge
 <details>
 <summary>System Requirements</summary>
 
-- **Python:** 3.10 or newer
+- **Python:** 3.10 or newer (install from [python.org](https://www.python.org/about/gettingstarted/)
 - **pip:** Python package manager
 - **PostgreSQL:** 13+ (local or remote instance)
 - **Flask CLI:** installed automatically via `requirements.txt`
@@ -205,17 +205,17 @@ Starts the Flask development server. The API will be available at `http://127.0.
 1. **Provision services**
    - Option A (recommended): click **New → Blueprint** in Render, point it at this repo, and select `render.yaml`. It provisions the Postgres instance and web service with the correct commands automatically.
    - Option B (manual): create a Render PostgreSQL instance, then create a Web Service pointing at this repository.
-2. **Configure environment variables**  
+2. **Configure environment variables**
    In the Render Web Service dashboard, add:
    - `DATABASE_URL` – the managed Postgres connection string.
    - `JWT_SECRET_KEY` – production secret.
    - `FLASK_APP=main`
 3. **Build & start commands**
    - Build: `pip install -r requirements.txt`
-   - Start: `./bin/start.sh`  
+   - Start: `./bin/start.sh`
      *(Render defaults to `gunicorn main:app`; make sure you change it or use the blueprint so migrations run on deploy.)*
    - Optional: set `SKIP_SEED=1` in Render’s environment variables after the first deploy if you no longer want demo data applied.
-4. **What `bin/start.sh` does**  
+4. **What `bin/start.sh` does**
    The script (checked into this repo) applies migrations, seeds demo data (unless `SKIP_SEED=1`), then launches gunicorn:
    ```bash
    #!/usr/bin/env bash
@@ -224,7 +224,7 @@ Starts the Flask development server. The API will be available at `http://127.0.
    exec gunicorn "main:app"
    ```
    Because migrations run on every deploy, the hosted database stays aligned with the code.
-5. **Add a custom domain (optional)**  
+5. **Add a custom domain (optional)**
    Attach your domain via Render → Web Service → Settings → Custom Domains. Point a CNAME to the Render URL and HTTPS will auto-provision.
 
 Once Render shows the service as live, hit `/healthz` to confirm it returns `{"ok": true}`.
