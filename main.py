@@ -35,6 +35,20 @@ def create_app():
 
     register_error_handlers(app)
 
+    @app.get("/")
+    def welcome():
+        """Provide a quick status message for anyone hitting the root URL."""
+        return {
+            "message": "Welcome to CineCritic.",
+            "status": "online",
+            "try": {
+                "films": {"method": "GET", "path": "/films"},
+                "login": {"method": "POST", "path": "/auth/login"},
+                "watchlist": {"method": "GET", "path": "/users/me/watchlist"},
+            },
+            "docs": "See the project README for full usage details.",
+        }, 200
+
     @app.get("/healthz")
     def health():
         return {"ok": True}, 200
