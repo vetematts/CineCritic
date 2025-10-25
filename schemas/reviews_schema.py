@@ -8,6 +8,8 @@ Defines schemas for creating and serialising Review objects.
 """
 from marshmallow import Schema, fields, validate, validates_schema, ValidationError, pre_load
 
+from schemas.films_schema import FilmSchema
+
 # Allowed ratings: 0.5 .. 5.0 in 0.5 steps
 _ALLOWED_RATINGS = [x / 2 for x in range(1, 11)]  # 0.5..5.0
 
@@ -48,7 +50,7 @@ class ReviewSchema(Schema):
     Includes both user provided fields and server-managed metadata:
     - id, created_at, updated_at
     - published_at, flagged_at
-    - rating, body, status, film_id, user_id
+    - rating, body, status, film_id, user_id, film
     """
     # Server-managed fields are output-only
     id = fields.Integer(dump_only=True)
@@ -63,3 +65,4 @@ class ReviewSchema(Schema):
     status = fields.String()
     film_id = fields.Integer()
     user_id = fields.Integer()
+    film = fields.Nested(FilmSchema, dump_only=True)

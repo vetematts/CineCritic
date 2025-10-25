@@ -17,6 +17,7 @@ Note:
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from marshmallow import Schema, fields, validate
+from sqlalchemy.orm import selectinload
 
 # Local imports
 from extensions import db
@@ -77,7 +78,7 @@ def list_all_reviews():
     page = max(1, page)
     per_page = max(1, min(per_page, 100))
 
-    stmt = db.select(Review).where(Review.status == "published")
+    stmt = db.select(Review).options(selectinload(Review.film)).where(Review.status == "published")
 
     film_id = request.args.get("film_id")
     if film_id not in (None, ""):
@@ -123,6 +124,7 @@ def list_reviews(film_id: int):
     # Only published reviews are public
     stmt = (
         db.select(Review)
+        .options(selectinload(Review.film))
         .where(Review.film_id == film_id, Review.status == "published")
         .order_by(Review.created_at.desc())
     )
