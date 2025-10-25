@@ -9,6 +9,9 @@ Defines schema for serialising and validating watchlist entries.
 
 from marshmallow import Schema, fields, validate
 
+from schemas.films_schema import FilmSchema
+
+
 class WatchlistEntrySchema(Schema):
     """Schema for a watchlist entry.
 
@@ -20,3 +23,4 @@ class WatchlistEntrySchema(Schema):
     user_id = fields.Int(dump_only=True)
     film_id = fields.Int(required=True, validate=validate.Range(min=1))
     added_at = fields.DateTime(dump_only=True)
+    film = fields.Nested(FilmSchema, dump_only=True)

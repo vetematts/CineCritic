@@ -13,6 +13,7 @@ Note:
 # Installed imports
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from sqlalchemy.orm import selectinload
 
 # Local imports
 from extensions import db
@@ -54,11 +55,13 @@ def list_watchlist():
 
     base = db.select(Watchlist).where(Watchlist.user_id == user_id)
     total = db.session.scalar(db.select(db.func.count()).select_from(base.subquery()))
-    rows = db.session.scalars(
-        base.order_by(Watchlist.added_at.desc())
+    rows_query = (
+        base.options(selectinload(Watchlist.film))
+            .order_by(Watchlist.added_at.desc())
             .offset((page - 1) * per_page)
             .limit(per_page)
-    ).all()
+    )
+    rows = db.session.scalars(rows_query).all()
 
     return {
         "data": read_many.dump(rows),
