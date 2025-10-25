@@ -25,6 +25,7 @@ from models.films import Film
 from schemas.reviews_schema import ReviewCreateSchema, ReviewSchema
 
 review_bp = Blueprint("reviews", __name__)    # url_prefix set in controllers/__init__.py
+reviews_feed_bp = Blueprint("reviews_feed", __name__)
 
 # Schemas
 create_schema = ReviewCreateSchema()
@@ -61,6 +62,44 @@ def _ensure_film_or_404(film_id):
 
 def _forbidden(detail: str):
     return {"error": "forbidden", "detail": detail}, 403
+
+
+# ========= GLOBAL FEED =========
+# GET /reviews
+@reviews_feed_bp.get("/reviews")
+def list_all_reviews():
+    """List published reviews across all films (optional filters: film_id, user_id)."""
+    try:
+        page = int(request.args.get("page", 1))
+        per_page = int(request.args.get("per_page", 20))
+    except ValueError:
+        return {"error": "bad_request", "detail": "page and per_page must be integers"}, 400
+    page = max(1, page)
+    per_page = max(1, min(per_page, 100))
+
+    stmt = db.select(Review).where(Review.status == "published")
+
+    film_id = request.args.get("film_id")
+    if film_id not in (None, ""):
+        try:
+            stmt = stmt.where(Review.film_id == int(film_id))
+        except ValueError:
+            return {"error": "bad_request", "detail": "film_id must be an integer"}, 400
+
+    user_id = request.args.get("user_id")
+    if user_id not in (None, ""):
+        try:
+            stmt = stmt.where(Review.user_id == int(user_id))
+        except ValueError:
+            return {"error": "bad_request", "detail": "user_id must be an integer"}, 400
+
+    stmt = stmt.order_by(Review.published_at.desc())
+    pager = db.paginate(stmt, page=page, per_page=per_page, error_out=False)
+
+    return {
+        "data": read_many.dump(pager.items),
+        "meta": {"page": page, "per_page": per_page, "total": pager.total, "pages": pager.pages},
+    }, 200
 
 
 # ========= LIST REVIEWS =========

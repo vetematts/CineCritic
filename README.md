@@ -310,6 +310,17 @@ All responses are JSON. Pagination parameters: `?page=` and `?per_page=` where a
 </details>
 
 <details>
+<summary>Reviews Feed (`/reviews`)</summary>
+
+### Reviews Feed (`/reviews`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/reviews` | List published reviews across all films (filters: `film_id`, `user_id`) |
+
+</details>
+
+<details>
 <summary>Watchlist (`/users/me/watchlist`)</summary>
 
 ### Watchlist (`/users/me/watchlist`)
