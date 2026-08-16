@@ -32,3 +32,16 @@ dist/
 .DS_Store
 .vscode/
 .idea/
+
+# Terraform (local-only)
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+infra/terraform.tfvars
+infra/backend.hcl
