@@ -1,0 +1,39 @@
+# Keeps the free-tier demo backend responsive by pinging a lightweight endpoint.
+# Targets /health only: it returns a static payload and does not touch Postgres,
+# so the database stays suspended (and inside its free compute budget) until a
+# real visitor hits a data route.
+name: Keep demo warm
+
+on:
+  schedule:
+    - cron: "*/14 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend health endpoint
+        env:
+          DEMO_BACKEND_URL: ${{ vars.DEMO_BACKEND_URL }}
+        run: |
+          set -uo pipefail
+          BASE="${DEMO_BACKEND_URL:-https://cinecritic.onrender.com}"
+
+          # Render free instances cold start slowly, so allow a generous timeout
+          # and retry rather than failing the run on the first slow response.
+          for attempt in 1 2 3; do
+            CODE=$(curl -sS -o /dev/null -w '%{http_code}' \
+              --max-time 90 "${BASE}/health" || echo "000")
+
+            if [ "$CODE" = "200" ]; then
+              echo "Backend awake (HTTP $CODE) on attempt $attempt"
+              exit 0
+            fi
+
+            echo "Attempt $attempt returned HTTP $CODE"
+            sleep 15
+          done
+
+          echo "Backend did not respond with 200 after 3 attempts" >&2
+          exit 1

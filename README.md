@@ -8,8 +8,12 @@
 
 ## Live demo
 
-- Frontend (Cloud Run): https://cinecritic-frontend-771267628014.australia-southeast1.run.app/
-- Backend docs (Cloud Run): https://cinecritic-backend-771267628014.australia-southeast1.run.app/docs
+- Web app: https://cinecritic-fawn.vercel.app
+- API docs (Swagger): https://cinecritic.onrender.com/docs
+
+Sign in with the demo account `demo@example.com` / `demopass` to try reviews,
+watchlist, and favourites. The API runs on a free tier and sleeps when idle, so
+the first request after a quiet period can take up to a minute.
 
 This repository contains the complete CineCritic application:
 - `frontend/` (React)
@@ -68,9 +72,9 @@ Full route and request details are in **Swagger** (`/docs` when the API is runni
 
 | | URL |
 | --- | --- |
-| Web app | https://cinecritic.app |
-| API (example) | https://cinecritic.onrender.com |
-| API docs (example) | https://cinecritic.onrender.com/docs |
+| Web app | https://cinecritic-fawn.vercel.app |
+| API | https://cinecritic.onrender.com |
+| API docs | https://cinecritic.onrender.com/docs |
 
 ## Prerequisites
 

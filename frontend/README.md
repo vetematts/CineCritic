@@ -31,8 +31,7 @@ Movie review and discovery platform built with React, backed by our
 
 ## 🚀 Deployed URLs
 
-- Frontend App: https://cinecritic.app
-- Fallback (Vercel): https://cinecritic-fawn.vercel.app
+- Frontend App: https://cinecritic-fawn.vercel.app
 - Backend API: https://cinecritic.onrender.com
 
 ## ✅ Prerequisites
