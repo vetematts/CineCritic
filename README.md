@@ -185,8 +185,8 @@ Automation uses **GitHub Actions**: lint and test the apps, verify Docker builds
 | --- | --- |
 | GitHub Actions | CI, publish, deploy orchestration |
 | Docker + Compose | Local stack; same images CI builds |
-| Google Artifact Registry | Versioned Docker images (`sha-*`, `latest`) |
-| Google Cloud Run | Managed containers, HTTPS, revisions |
+| GitHub Container Registry | Versioned Docker images (`sha-*`, `latest`) |
+| Google Cloud Run | Managed containers, HTTPS, revisions (optional deploy target) |
 | GitHub Secrets / Environments | Credentials and deploy-time configuration |
 
 **Why this stack (short):** GitHub Actions is native to the repo and keeps logs and artefacts in one place. Artifact Registry and Cloud Run stay inside GCP, so IAM and deployment stay coherent. Alternatives include GitLab CI, Jenkins, GHCR + another host, or GKE (more operations overhead than this project needs).
@@ -222,10 +222,13 @@ Automation uses **GitHub Actions**: lint and test the apps, verify Docker builds
    **Triggers:** after **`CI`** completes successfully on `main` / `master` (`workflow_run`), or **manual** `workflow_dispatch`.
 
    **What it does:**
-   - Builds and pushes `cinecritic-frontend` and `cinecritic-backend` images to Artifact Registry.
+   - Builds and pushes `cinecritic-frontend` and `cinecritic-backend` images to
+     **GitHub Container Registry** (`ghcr.io/vetematts/*`), authenticating with the
+     workflow's own `GITHUB_TOKEN` rather than a long-lived registry credential.
    - Tags images as:
      - `sha-<short>` (traceable to a commit)
      - `latest` (convenience)
+   - Caches layers between runs via GitHub Actions cache.
 
    ![Docker Publish workflow success](./docs/screenshots/Docker%20Publish%20workflow.png)
 
@@ -244,15 +247,23 @@ Automation uses **GitHub Actions**: lint and test the apps, verify Docker builds
 
 Set under **Settings → Secrets and variables → Actions** (and use **Environments** for production if you want approvals).
 
+Image publishing needs **no secrets** — it uses the built-in `GITHUB_TOKEN`.
+The secrets below are required only by the optional **Deploy Cloud Run** workflow:
+
 | Secret | Used for |
 | --- | --- |
-| `GCP_SA_KEY` | JSON key for GCP (publish + deploy) |
+| `GCP_SA_KEY` | JSON key for GCP (deploy) |
 | `GCP_PROJECT_ID` | GCP project |
 | `GCP_ARTIFACT_REGISTRY_REGION` | Artifact Registry region |
 | `GCP_ARTIFACT_REGISTRY_REPOSITORY` | Repository name |
+| `CLOUDSQL_CONNECTION_NAME` | Cloud SQL instance connection name |
 | `RUN_DATABASE_URL` | Production Postgres URL (deploy) |
 | `RUN_JWT_SECRET` | Production JWT secret (deploy) |
 | `RUN_TMDB_API_KEY` | Production TMDB key (deploy) |
+
+**Note:** Cloud Run can only pull images from Artifact Registry or GCR, not from
+`ghcr.io`. Deploying to Cloud Run therefore requires an Artifact Registry
+repository and a mirror step — see `infra/` for the Terraform that provisions it.
 
 Do **not** commit real secrets. Local development uses `.env`; CI build jobs use placeholders where noted above.
 
