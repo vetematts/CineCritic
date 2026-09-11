@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 // Plugin the top level components that will exist on all the pages
 import { Header } from '../../components/header';
 import { Footer } from '../../components/footer';
+import { WakeNotice } from '../../components/wakeNotice';
 
 // Import the CSS styling for the home page and page layouts
 import { StyledMain } from './style';
@@ -12,7 +13,9 @@ import { StyledMain } from './style';
 export function PageLayout({ currentPage }) {
   return (
     <>
-      {/* Only show the header when we're 
+      {/* Explains the free-tier cold start on whichever page triggers it */}
+      <WakeNotice />
+      {/* Only show the header when we're
                 not on the main/front page */}
       {currentPage !== '/' && <Header />}
       <StyledMain>

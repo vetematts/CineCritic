@@ -1,3 +1,5 @@
+import { requestFinished, requestStarted } from './wakeState';
+
 const runtimeBaseUrl =
   typeof window !== 'undefined' ? window.__CINECRITIC_RUNTIME__?.VITE_API_BASE_URL : undefined;
 
@@ -52,6 +54,8 @@ const request = async (path, options = {}) => {
     requestHeaders.Authorization = `Bearer ${token}`;
   }
 
+  requestStarted();
+
   try {
     const response = await fetch(url, {
       method,
@@ -77,6 +81,8 @@ const request = async (path, options = {}) => {
     const networkError = new Error('Network error');
     networkError.code = 'network_error';
     throw networkError;
+  } finally {
+    requestFinished();
   }
 };
 
