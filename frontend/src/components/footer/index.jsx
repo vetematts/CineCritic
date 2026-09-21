@@ -1,3 +1,6 @@
+// Import the GitHub mark used in the author credit
+import { GithubMark } from '../icons/githubMark';
+
 // Import the styling for each of the footer components
 import {
   StyledFooter,
@@ -9,6 +12,8 @@ import {
   StyledFooterLinks,
   StyledList,
   StyledFooterLinkList,
+  StyledFooterCredit,
+  StyledFooterCreditLink,
 } from './style';
 
 // Three div containers to flex as columns that contain different links
@@ -52,11 +57,11 @@ export function Footer() {
               </StyledFooterLinks>
             </StyledFooterLinkList>
             <StyledFooterLinkList>
-              <StyledFooterLinks to="https://github.com/vetematts">Contact Us</StyledFooterLinks>
+              <StyledFooterLinks to="https://github.matteoc.dev">Contact</StyledFooterLinks>
             </StyledFooterLinkList>
             <StyledFooterLinkList>
-              <StyledFooterLinks to="https://github.com/users/vetematts/projects/2">
-                Our GitHub
+              <StyledFooterLinks to="https://github.com/vetematts/CineCritic-docker">
+                Source Code
               </StyledFooterLinks>
             </StyledFooterLinkList>
           </StyledList>
@@ -74,6 +79,17 @@ export function Footer() {
         <StyledFooterText>
           This site was designed for academic purposes and to share our enthusiasm for films.
         </StyledFooterText>
+        <StyledFooterCredit>
+          Built by
+          <StyledFooterCreditLink
+            href="https://github.matteoc.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <GithubMark />
+            Matt Cicala
+          </StyledFooterCreditLink>
+        </StyledFooterCredit>
       </StyledFooterTextContainer>
     </StyledFooter>
   );

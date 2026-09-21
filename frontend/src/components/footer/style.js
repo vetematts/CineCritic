@@ -90,3 +90,33 @@ export const StyledFooterLinkList = styled.li`
   // Space out the links
   padding: 0 0 0.5rem 0;
 `;
+
+// Separate the author credit from the site description above it
+export const StyledFooterCredit = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  margin: 1.5rem 0 0 0;
+  padding: 1.5rem 0 0 0;
+  border-top: 1px solid rgba(155, 147, 147, 0.2);
+
+  color: #9b9393ff;
+  font-size: 0.9rem;
+`;
+
+// Match the other footer links, but keep the mark and name on one line
+export const StyledFooterCreditLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  color: #cec8c8ff;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+`;
