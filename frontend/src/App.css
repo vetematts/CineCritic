@@ -17,6 +17,10 @@
 
   /* Font style */
   font-family: 'Google Sans', sans-serif;
+
+  @media (max-width: 768px) {
+    padding: 1rem 0.5rem;
+  }
 }
 
 h2,
