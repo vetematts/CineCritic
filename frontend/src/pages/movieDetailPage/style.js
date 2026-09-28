@@ -20,8 +20,14 @@ export const StyledMainContent = styled.div`
   flex-wrap: wrap;
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 1.5rem;
+    display: grid;
+    grid-template-columns: clamp(96px, 28vw, 160px) minmax(0, 1fr);
+    grid-template-areas:
+      'poster details'
+      'actions actions'
+      'body body';
+    align-items: start;
+    gap: 1.25rem 1rem;
   }
 `;
 
@@ -31,9 +37,7 @@ export const StyledPosterColumn = styled.div`
   width: 300px;
 
   @media (max-width: 768px) {
-    width: 100%;
-    max-width: 300px;
-    margin: 0 auto;
+    display: contents;
   }
 `;
 
@@ -43,8 +47,7 @@ export const StyledTextColumn = styled.div`
   min-width: 300px;
 
   @media (max-width: 768px) {
-    min-width: 0;
-    width: 100%;
+    display: contents;
   }
 `;
 
@@ -54,6 +57,12 @@ export const StyledPoster = styled.img`
   height: 450px;
   object-fit: cover;
   border-radius: 10px;
+
+  @media (max-width: 768px) {
+    grid-area: poster;
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
 `;
 
 const shimmer = keyframes`
@@ -80,6 +89,12 @@ export const StyledSkeletonPoster = styled(StyledSkeletonBlock)`
   width: 100%;
   height: 450px;
   border-radius: 10px;
+
+  @media (max-width: 768px) {
+    grid-area: poster;
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
 `;
 
 export const StyledSkeletonTitle = styled(StyledSkeletonBlock)`
@@ -94,6 +109,7 @@ export const StyledSkeletonLine = styled(StyledSkeletonBlock)`
   width: ${({ $width }) => $width || '100%'};
   margin: 0.5rem 0;
   border-radius: 6px;
+  max-width: 100%;
 `;
 
 export const StyledSkeletonPill = styled(StyledSkeletonBlock)`
@@ -101,6 +117,7 @@ export const StyledSkeletonPill = styled(StyledSkeletonBlock)`
   width: 10rem;
   margin: 0.75rem 0;
   border-radius: 999px;
+  max-width: 100%;
 `;
 
 export const StyledSkeletonMetaRow = styled.div`
@@ -120,12 +137,38 @@ export const StyledPosterPlaceholder = styled.div`
   align-items: center;
   justify-content: center;
   color: #bdbdbd;
+
+  @media (max-width: 768px) {
+    grid-area: poster;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+  }
 `;
 
 // Container for movie details (title, meta, overview)
 export const StyledMovieDetails = styled.div`
   margin-bottom: 2rem;
   margin-top: 0;
+
+  @media (max-width: 768px) {
+    grid-area: details;
+    min-width: 0;
+    margin: 0;
+  }
+`;
+
+export const StyledBody = styled.div`
+  @media (max-width: 768px) {
+    grid-area: body;
+    min-width: 0;
+
+    > h3:first-child {
+      margin-top: 0;
+    }
+  }
 `;
 
 export const StyledTitle = styled.h2`
@@ -136,7 +179,8 @@ export const StyledTitle = styled.h2`
   line-height: 1.2;
 
   @media (max-width: 768px) {
-    font-size: 1.75rem;
+    font-size: clamp(1.25rem, 5vw, 1.75rem);
+    overflow-wrap: anywhere;
   }
 `;
 
@@ -167,6 +211,13 @@ export const StyledAverageRating = styled.div`
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.3);
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    max-width: 100%;
+    margin: 0.5rem 0;
+  }
 `;
 
 export const StyledAverageRatingLabel = styled.p`
@@ -265,6 +316,12 @@ export const StyledMetaContainer = styled.div`
   gap: 1.5rem;
   flex-wrap: wrap;
   margin: 0.75rem 0;
+
+  @media (max-width: 768px) {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 `;
 
 export const StyledMetaItem = styled.div`
@@ -273,6 +330,10 @@ export const StyledMetaItem = styled.div`
   gap: 0.5rem;
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
+
+  svg {
+    flex-shrink: 0;
+  }
 `;
 
 // Watchlist button
@@ -496,4 +557,16 @@ export const StyledActionButtons = styled.div`
   gap: 1rem;
   margin-top: 1.5rem;
   width: 100%;
+
+  @media (max-width: 768px) {
+    grid-area: actions;
+    margin-top: 0;
+    gap: 0.75rem;
+
+    > button,
+    > a {
+      min-height: 44px;
+      white-space: normal;
+    }
+  }
 `;

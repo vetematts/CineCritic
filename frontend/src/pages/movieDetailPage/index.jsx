@@ -25,6 +25,7 @@ import {
   StyledAverageRatingLabel,
   StyledAverageRatingValue,
   StyledBackButton,
+  StyledBody,
   StyledCancelButton,
   StyledCloseButton,
   StyledContainer,
@@ -252,15 +253,19 @@ export function MovieDetailPage() {
             <StyledSkeletonPoster />
           </StyledPosterColumn>
           <StyledTextColumn>
-            <StyledSkeletonTitle />
-            <StyledSkeletonMetaRow>
-              <StyledSkeletonLine $width="10rem" />
-              <StyledSkeletonLine $width="7rem" />
-            </StyledSkeletonMetaRow>
-            <StyledSkeletonPill />
-            <StyledSkeletonLine />
-            <StyledSkeletonLine $width="90%" />
-            <StyledSkeletonLine $width="75%" />
+            <StyledMovieDetails>
+              <StyledSkeletonTitle />
+              <StyledSkeletonMetaRow>
+                <StyledSkeletonLine $width="10rem" />
+                <StyledSkeletonLine $width="7rem" />
+              </StyledSkeletonMetaRow>
+              <StyledSkeletonPill />
+            </StyledMovieDetails>
+            <StyledBody>
+              <StyledSkeletonLine />
+              <StyledSkeletonLine $width="90%" />
+              <StyledSkeletonLine $width="75%" />
+            </StyledBody>
           </StyledTextColumn>
         </StyledMainContent>
       )}
@@ -349,9 +354,9 @@ export function MovieDetailPage() {
                   Sign in to Rate & Review
                 </StyledSignInReviewButton>
               )}
+              {watchlistError && <StyledError>{watchlistError}</StyledError>}
+              {favouritesError && <StyledError>{favouritesError}</StyledError>}
             </StyledActionButtons>
-            {watchlistError && <StyledError>{watchlistError}</StyledError>}
-            {favouritesError && <StyledError>{favouritesError}</StyledError>}
           </StyledPosterColumn>
           <StyledTextColumn>
             <StyledMovieDetails>
@@ -398,142 +403,144 @@ export function MovieDetailPage() {
                   ))}
                 </StyledGenrePills>
               )}
+            </StyledMovieDetails>
+            <StyledBody>
               {movie.overview && (
                 <>
                   <StyledHeading>Overview</StyledHeading>
                   <StyledParagraph>{movie.overview}</StyledParagraph>
                 </>
               )}
-            </StyledMovieDetails>
-            {isReviewModalOpen && (
-              <StyledModalOverlay
-                onClick={(e) => {
-                  if (e.target === e.currentTarget) {
-                    setIsReviewModalOpen(false);
-                    setEditingReviewId(null);
-                  }
-                }}
-              >
-                <StyledModal onClick={(e) => e.stopPropagation()}>
-                  <StyledModalHeader>
-                    <StyledModalTitle>
-                      {editingReviewId ? 'Edit Review' : 'Rate & Review'}
-                    </StyledModalTitle>
-                    <StyledCloseButton
-                      type="button"
-                      onClick={() => {
-                        setIsReviewModalOpen(false);
-                        setEditingReviewId(null);
-                        setReviewError(null);
-                      }}
-                    >
-                      ×
-                    </StyledCloseButton>
-                  </StyledModalHeader>
-                  <StyledModalContent>
-                    {reviewError && <StyledError>{reviewError}</StyledError>}
-                    <StyledModalForm
-                      onSubmit={async (event) => {
-                        event.preventDefault();
-                        setReviewError(null);
-                        try {
-                          if (editingReviewId) {
-                            // Update existing review
-                            await put(`/api/reviews/${editingReviewId}`, {
-                              rating: Number(editingRating),
-                              body: editingBody,
-                            });
-                          } else {
-                            // Create new review
-                            await post('/api/reviews', {
-                              tmdbId: Number(id),
-                              userId,
-                              rating: Number(reviewRating),
-                              body: reviewBody,
-                              status: 'published',
-                            });
-                          }
-
-                          const updated = await get(`/api/reviews/${id}`);
-                          setReviews(updated || []);
-                          setReviewBody('');
-                          setReviewRating('');
-                          setEditingBody('');
-                          setEditingRating('');
-                          setEditingReviewId(null);
-                          setIsReviewModalOpen(false);
-                        } catch (err) {
-                          setReviewError(err?.message || 'Unable to submit review.');
-                        }
-                      }}
-                    >
-                      <StyledModalLabel>
-                        Rating
-                        <div style={{ marginTop: '0.5rem' }}>
-                          <StarRating
-                            value={editingReviewId ? editingRating : reviewRating}
-                            onChange={editingReviewId ? setEditingRating : setReviewRating}
-                          />
-                        </div>
-                      </StyledModalLabel>
-                      <StyledModalLabel>
-                        Review
-                        <StyledModalTextarea
-                          value={editingReviewId ? editingBody : reviewBody}
-                          onChange={(event) => {
-                            if (editingReviewId) {
-                              setEditingBody(event.target.value);
-                            } else {
-                              setReviewBody(event.target.value);
-                            }
-                          }}
-                          placeholder="Add a review..."
-                        />
-                      </StyledModalLabel>
-                      <StyledModalButtons>
-                        <StyledCancelButton
-                          type="button"
-                          onClick={() => {
-                            setIsReviewModalOpen(false);
-                            setEditingReviewId(null);
-                            setReviewError(null);
-                          }}
-                        >
-                          Cancel
-                        </StyledCancelButton>
-                        <StyledSubmitButton type="submit">Save</StyledSubmitButton>
-                      </StyledModalButtons>
-                    </StyledModalForm>
-                  </StyledModalContent>
-                </StyledModal>
-              </StyledModalOverlay>
-            )}
-            {reviews.length > 0 && (
-              <>
-                <StyledHeading>Reviews</StyledHeading>
-                <MovieReviewPanel
-                  reviewsArray={reviews}
-                  currentUserId={user?.id}
-                  onEdit={(review) => {
-                    const reviewId = review.id || review._id;
-                    setEditingReviewId(reviewId);
-                    setEditingBody(review.body || review.content || review.text || '');
-                    setEditingRating(String(review.rating || '5'));
-                    setIsReviewModalOpen(true);
-                  }}
-                  onDelete={async (review) => {
-                    setReviewError(null);
-                    try {
-                      await del(`/api/reviews/${review.id || review._id}`);
-                      const updated = await get(`/api/reviews/${id}`);
-                      setReviews(updated || []);
-                    } catch (err) {
-                      setReviewError(err?.message || 'Unable to delete review.');
+              {isReviewModalOpen && (
+                <StyledModalOverlay
+                  onClick={(e) => {
+                    if (e.target === e.currentTarget) {
+                      setIsReviewModalOpen(false);
+                      setEditingReviewId(null);
                     }
                   }}
-                />
-              </>
-            )}
+                >
+                  <StyledModal onClick={(e) => e.stopPropagation()}>
+                    <StyledModalHeader>
+                      <StyledModalTitle>
+                        {editingReviewId ? 'Edit Review' : 'Rate & Review'}
+                      </StyledModalTitle>
+                      <StyledCloseButton
+                        type="button"
+                        onClick={() => {
+                          setIsReviewModalOpen(false);
+                          setEditingReviewId(null);
+                          setReviewError(null);
+                        }}
+                      >
+                        ×
+                      </StyledCloseButton>
+                    </StyledModalHeader>
+                    <StyledModalContent>
+                      {reviewError && <StyledError>{reviewError}</StyledError>}
+                      <StyledModalForm
+                        onSubmit={async (event) => {
+                          event.preventDefault();
+                          setReviewError(null);
+                          try {
+                            if (editingReviewId) {
+                              // Update existing review
+                              await put(`/api/reviews/${editingReviewId}`, {
+                                rating: Number(editingRating),
+                                body: editingBody,
+                              });
+                            } else {
+                              // Create new review
+                              await post('/api/reviews', {
+                                tmdbId: Number(id),
+                                userId,
+                                rating: Number(reviewRating),
+                                body: reviewBody,
+                                status: 'published',
+                              });
+                            }
+
+                            const updated = await get(`/api/reviews/${id}`);
+                            setReviews(updated || []);
+                            setReviewBody('');
+                            setReviewRating('');
+                            setEditingBody('');
+                            setEditingRating('');
+                            setEditingReviewId(null);
+                            setIsReviewModalOpen(false);
+                          } catch (err) {
+                            setReviewError(err?.message || 'Unable to submit review.');
+                          }
+                        }}
+                      >
+                        <StyledModalLabel>
+                          Rating
+                          <div style={{ marginTop: '0.5rem' }}>
+                            <StarRating
+                              value={editingReviewId ? editingRating : reviewRating}
+                              onChange={editingReviewId ? setEditingRating : setReviewRating}
+                            />
+                          </div>
+                        </StyledModalLabel>
+                        <StyledModalLabel>
+                          Review
+                          <StyledModalTextarea
+                            value={editingReviewId ? editingBody : reviewBody}
+                            onChange={(event) => {
+                              if (editingReviewId) {
+                                setEditingBody(event.target.value);
+                              } else {
+                                setReviewBody(event.target.value);
+                              }
+                            }}
+                            placeholder="Add a review..."
+                          />
+                        </StyledModalLabel>
+                        <StyledModalButtons>
+                          <StyledCancelButton
+                            type="button"
+                            onClick={() => {
+                              setIsReviewModalOpen(false);
+                              setEditingReviewId(null);
+                              setReviewError(null);
+                            }}
+                          >
+                            Cancel
+                          </StyledCancelButton>
+                          <StyledSubmitButton type="submit">Save</StyledSubmitButton>
+                        </StyledModalButtons>
+                      </StyledModalForm>
+                    </StyledModalContent>
+                  </StyledModal>
+                </StyledModalOverlay>
+              )}
+              {reviews.length > 0 && (
+                <>
+                  <StyledHeading>Reviews</StyledHeading>
+                  <MovieReviewPanel
+                    reviewsArray={reviews}
+                    currentUserId={user?.id}
+                    onEdit={(review) => {
+                      const reviewId = review.id || review._id;
+                      setEditingReviewId(reviewId);
+                      setEditingBody(review.body || review.content || review.text || '');
+                      setEditingRating(String(review.rating || '5'));
+                      setIsReviewModalOpen(true);
+                    }}
+                    onDelete={async (review) => {
+                      setReviewError(null);
+                      try {
+                        await del(`/api/reviews/${review.id || review._id}`);
+                        const updated = await get(`/api/reviews/${id}`);
+                        setReviews(updated || []);
+                      } catch (err) {
+                        setReviewError(err?.message || 'Unable to delete review.');
+                      }
+                    }}
+                  />
+                </>
+              )}
+            </StyledBody>
           </StyledTextColumn>
         </StyledMainContent>
       )}
