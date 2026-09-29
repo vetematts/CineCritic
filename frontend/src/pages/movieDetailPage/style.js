@@ -14,27 +14,59 @@ export const StyledContainer = styled.section`
 `;
 
 export const StyledBackdrop = styled.div`
-  position: relative;
-  width: 100%;
-  height: clamp(280px, 32vw, 400px);
-  margin-bottom: -80px;
+  /* The page root anchors the artwork so it also sits behind the header. */
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+  width: min(100vw, 1600px);
+  height: clamp(460px, 46vw, 660px);
   overflow: hidden;
-  border-radius: 12px 12px 0 0;
   pointer-events: none;
+  mask-image: linear-gradient(to bottom, #000 70%, transparent 98%);
 
   &::after {
     content: '';
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(to bottom, rgba(9, 15, 20, 0.05) 25%, #090f14 100%),
-      linear-gradient(to right, #090f14, transparent 15%, transparent 85%, #090f14);
+      linear-gradient(
+        to bottom,
+        rgba(9, 15, 20, 0.8) 0%,
+        rgba(9, 15, 20, 0.25) 20%,
+        rgba(9, 15, 20, 0.05) 38%,
+        rgba(9, 15, 20, 0.65) 65%,
+        rgba(9, 15, 20, 0.95) 85%,
+        #090f14 100%
+      ),
+      linear-gradient(to right, #090f14, transparent 22%, transparent 78%, #090f14);
   }
 
   @media (max-width: 768px) {
-    height: clamp(140px, 38vw, 220px);
-    margin-bottom: -24px;
-    border-radius: 8px 8px 0 0;
+    height: 460px;
+
+    &::after {
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(9, 15, 20, 0.85) 0%,
+          rgba(9, 15, 20, 0.75) 32%,
+          rgba(9, 15, 20, 0.2) 50%,
+          rgba(9, 15, 20, 0.85) 80%,
+          #090f14 100%
+        ),
+        linear-gradient(to right, #090f14, transparent 12%, transparent 88%, #090f14);
+    }
+  }
+`;
+
+export const StyledBackdropSpace = styled.div`
+  height: clamp(160px, 18vw, 260px);
+  pointer-events: none;
+
+  @media (max-width: 768px) {
+    height: 96px;
   }
 `;
 

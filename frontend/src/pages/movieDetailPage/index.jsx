@@ -27,6 +27,7 @@ import {
   StyledBackButton,
   StyledBackdrop,
   StyledBackdropImage,
+  StyledBackdropSpace,
   StyledBody,
   StyledCancelButton,
   StyledCloseButton,
@@ -77,18 +78,21 @@ function MovieBackdrop({ path }) {
   if (!path || failed) return null;
 
   return (
-    <StyledBackdrop aria-hidden="true">
-      <StyledBackdropImage
-        src={getPosterUrl(path, 'w1280')}
-        srcSet={`${getPosterUrl(path, 'w780')} 780w, ${getPosterUrl(path, 'w1280')} 1280w`}
-        sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1280px) calc(100vw - 64px), 1216px"
-        alt=""
-        width="1280"
-        height="720"
-        fetchPriority="high"
-        onError={() => setFailed(true)}
-      />
-    </StyledBackdrop>
+    <>
+      <StyledBackdrop aria-hidden="true">
+        <StyledBackdropImage
+          src={getPosterUrl(path, 'w1280')}
+          srcSet={`${getPosterUrl(path, 'w780')} 780w, ${getPosterUrl(path, 'w1280')} 1280w`}
+          sizes="(max-width: 1600px) 100vw, 1600px"
+          alt=""
+          width="1280"
+          height="720"
+          fetchPriority="high"
+          onError={() => setFailed(true)}
+        />
+      </StyledBackdrop>
+      <StyledBackdropSpace aria-hidden="true" />
+    </>
   );
 }
 

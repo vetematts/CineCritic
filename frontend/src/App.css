@@ -1,4 +1,7 @@
 #root {
+  /* Keep page artwork behind the header and content, within its own layer. */
+  position: relative;
+  isolation: isolate;
   /* Container Dimensions */
   max-width: 1280px;
   width: 100%;
@@ -7,7 +10,6 @@
   margin: 0 auto;
   padding: 2rem;
   box-sizing: border-box;
-  overflow-x: hidden;
 
   /* Alignment for the children inside the container */
   justify-content: center;
