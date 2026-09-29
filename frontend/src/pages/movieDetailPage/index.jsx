@@ -25,6 +25,8 @@ import {
   StyledAverageRatingLabel,
   StyledAverageRatingValue,
   StyledBackButton,
+  StyledBackdrop,
+  StyledBackdropImage,
   StyledBody,
   StyledCancelButton,
   StyledCloseButton,
@@ -68,6 +70,27 @@ import {
   StyledTitle,
   StyledWatchlistButton,
 } from './style';
+
+function MovieBackdrop({ path }) {
+  const [failed, setFailed] = useState(false);
+
+  if (!path || failed) return null;
+
+  return (
+    <StyledBackdrop aria-hidden="true">
+      <StyledBackdropImage
+        src={getPosterUrl(path, 'w1280')}
+        srcSet={`${getPosterUrl(path, 'w780')} 780w, ${getPosterUrl(path, 'w1280')} 1280w`}
+        sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1280px) calc(100vw - 64px), 1216px"
+        alt=""
+        width="1280"
+        height="720"
+        fetchPriority="high"
+        onError={() => setFailed(true)}
+      />
+    </StyledBackdrop>
+  );
+}
 
 export function MovieDetailPage() {
   const { id } = useParams();
@@ -247,6 +270,7 @@ export function MovieDetailPage() {
         <BackArrowIcon />
         Back to Home
       </StyledBackButton>
+      {!loading && movie && <MovieBackdrop key={movie.backdrop_path} path={movie.backdrop_path} />}
       {loading && (
         <StyledMainContent>
           <StyledPosterColumn>

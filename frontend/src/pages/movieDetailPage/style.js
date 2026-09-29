@@ -13,8 +13,42 @@ export const StyledContainer = styled.section`
   }
 `;
 
+export const StyledBackdrop = styled.div`
+  position: relative;
+  width: 100%;
+  height: clamp(280px, 32vw, 400px);
+  margin-bottom: -80px;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+  pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(9, 15, 20, 0.05) 25%, #090f14 100%),
+      linear-gradient(to right, #090f14, transparent 15%, transparent 85%, #090f14);
+  }
+
+  @media (max-width: 768px) {
+    height: clamp(140px, 38vw, 220px);
+    margin-bottom: -24px;
+    border-radius: 8px 8px 0 0;
+  }
+`;
+
+export const StyledBackdropImage = styled.img`
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+`;
+
 // Main flex container: poster column + text column
 export const StyledMainContent = styled.div`
+  position: relative;
   display: flex;
   gap: 2rem;
   flex-wrap: wrap;
